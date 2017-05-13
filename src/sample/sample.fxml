@@ -4,32 +4,33 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Rectangle?>
 
-<GridPane alignment="center" hgap="10" prefHeight="300.0" prefWidth="500.0" vgap="10" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <AnchorPane prefHeight="300.0" prefWidth="500.0">
+<GridPane alignment="center" hgap="10" prefHeight="367.0" prefWidth="419.0" vgap="10" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <AnchorPane prefHeight="359.0" prefWidth="467.0">
       <children>
-          <Button layoutX="356.0" layoutY="108.0" onAction="#encryptFile" prefHeight="30.0" prefWidth="100.0" text="Encrypt" />
-          <Button layoutX="356.0" layoutY="145.0" onAction="#decryptFile" prefHeight="30.0" prefWidth="100.0" text="Decrypt" />
-         <RadioButton fx:id="transposition" layoutX="229.0" layoutY="99.0" mnemonicParsing="false" selected="true" text="Transposition">
+          <Button layoutX="293.0" layoutY="241.0" onAction="#encryptFile" prefHeight="30.0" prefWidth="100.0" text="Encrypt" />
+          <Button layoutX="293.0" layoutY="278.0" onAction="#decryptFile" prefHeight="30.0" prefWidth="100.0" text="Decrypt" />
+         <RadioButton fx:id="transposition" layoutX="305.0" layoutY="113.0" mnemonicParsing="false" selected="true" text="Transposition">
             <toggleGroup>
                <ToggleGroup fx:id="Cipher" />
             </toggleGroup>
          </RadioButton>
-         <RadioButton fx:id="vigenere" layoutX="229.0" layoutY="122.0" mnemonicParsing="false" text="Vigenere" toggleGroup="$Cipher" />
-         <RadioButton fx:id="vernam" layoutX="229.0" layoutY="145.0" mnemonicParsing="false" text="Vernam" toggleGroup="$Cipher" />
-         <Label layoutX="213.0" layoutY="76.0" text="Select Cipher:" />
-         <RadioButton fx:id="winding" layoutX="229.0" layoutY="167.0" mnemonicParsing="false" text="Winding" toggleGroup="$Cipher" />
-         <PasswordField fx:id="inputKey" layoutX="349.0" layoutY="73.0" prefHeight="25.0" prefWidth="114.0" promptText="Enter key..." />
-         <TextField editable="false" layoutX="38.0" layoutY="55.0" onDragDropped="#dropping" onDragOver="#draggingOver" prefHeight="150.0" prefWidth="150.0" promptText="      Drag &amp; Drop File">
+         <RadioButton fx:id="vigenere" layoutX="305.0" layoutY="136.0" mnemonicParsing="false" text="Vigenere" toggleGroup="$Cipher" />
+         <RadioButton fx:id="vernam" layoutX="305.0" layoutY="159.0" mnemonicParsing="false" text="Vernam" toggleGroup="$Cipher" />
+         <Label layoutX="301.0" layoutY="90.0" text="Select Cipher:" />
+         <RadioButton fx:id="winding" layoutX="305.0" layoutY="181.0" mnemonicParsing="false" text="Winding" toggleGroup="$Cipher" />
+         <PasswordField fx:id="inputKey" layoutX="286.0" layoutY="208.0" prefHeight="25.0" prefWidth="114.0" promptText="Enter key..." />
+         <TextField fx:id="inputTxt" editable="false" layoutX="21.0" layoutY="22.0" onDragDropped="#dropping" onDragOver="#draggingOver" onMouseClicked="#TypeFunct" prefHeight="286.0" prefWidth="253.0">
             <effect>
                <Glow />
             </effect>
@@ -37,32 +38,20 @@
                <Cursor fx:constant="DEFAULT" />
             </cursor>
          </TextField>
+         <ProgressBar layoutX="22.0" layoutY="324.0" prefHeight="25.0" prefWidth="378.0" progress="0.0" />
+         <ToggleButton fx:id="tglType" layoutX="295.0" layoutY="22.0" mnemonicParsing="false" onMouseClicked="#TypeMSG" prefHeight="25.0" prefWidth="100.0" text="Type Message">
+            <toggleGroup>
+               <ToggleGroup fx:id="ToggleTxtFile" />
+            </toggleGroup></ToggleButton>
+         <ToggleButton fx:id="tglFile" layoutX="295.0" layoutY="54.0" mnemonicParsing="false" onMouseClicked="#SelFILE" prefHeight="25.0" prefWidth="100.0" text="File" toggleGroup="$ToggleTxtFile" />
           
       </children>
    </AnchorPane>
-   <Rectangle fill="DODGERBLUE" height="30.0" scaleX="2.0" stroke="TRANSPARENT" strokeType="INSIDE" width="500.0" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS" />
-   <GridPane GridPane.rowIndex="1">
-     <columnConstraints>
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-     </columnConstraints>
-     <rowConstraints>
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-     </rowConstraints>
-      <children>
-         <Label text="File Selected:" GridPane.halignment="CENTER" />
-         <Label fx:id="lbldisplayFileLocation" text="Label" GridPane.columnIndex="1" />
-      </children>
-   </GridPane>
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="320.0" minHeight="175.0" prefHeight="320.0" />
-      <RowConstraints maxHeight="219.0" minHeight="30.0" prefHeight="30.0" />
+      <RowConstraints maxHeight="800.0" minHeight="175.0" prefHeight="800.0" />
    </rowConstraints>
     
 </GridPane>

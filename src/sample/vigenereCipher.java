@@ -3,9 +3,6 @@ package sample;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-/**
- * Created by Deltamike76 on 4/29/2017.
- */
 public class vigenereCipher extends CryptoMain
 {
 
@@ -29,6 +26,8 @@ public class vigenereCipher extends CryptoMain
         //set the encryption key
         setEncryptionKey(key);
     }
+
+    public char temp;
 
     @Override
     public void encrypt()
