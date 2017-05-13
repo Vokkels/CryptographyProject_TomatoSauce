@@ -24,25 +24,21 @@ public class vigenereCipher extends CryptoMain
         //Sets encryption type
         setEncryptionType(encryptionType.vigenereCipher);
 
+        System.out.println("LOOK AT ME THIS IS MY KEY: " + key);
+
         //set the encryption key
         setEncryptionKey(key);
-
-        //Tutorial of process to follow
-        //Opens the file with the correct file location
-        OpenFile();
-        //returns teh cipherText <Here modifications can be done with it>
-        getCipherText();
-        //after modified data save it with
-        //setCipherText("Modified data goes here");
-        //Gets the users crypto KEY
-        getEncryptionKey();
-        //Saves file, if isFileEncrypted is true it will be saved with the .tomato extension
-        SaveFile(true);
     }
 
     @Override
     public void encrypt()
     {
+        //repeat key to fill plaintext
+        OpenFile();
+        System.out.println(getEncryptionKey());
+        String plainText = getCipherText();
+        String key = getFilledKey(getEncryptionKey(),plainText.length());
+        System.out.println(key);
 
     }
 
@@ -50,5 +46,22 @@ public class vigenereCipher extends CryptoMain
     public void decrypt()
     {
 
+    }
+
+    private String getFilledKey(String key, int length)
+    {
+        String out = "";
+        for(int i = 0, j = 0; i < length; i++)
+        {
+            if(j < key.length()) {
+                out += key.charAt(j);
+                j++;
+            }
+            else{
+                j = 0;
+                out += key.charAt(j);
+            }
+        }
+        return out;
     }
 }

@@ -1,6 +1,8 @@
 package sample;
 
 import java.lang.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Deltamike276 on 4/29/2017.
@@ -37,8 +39,13 @@ public class windingCipher extends CryptoMain {
         double tmp  = Math.round((getCipherText().length()/(128*128))+0.5);
         int blockAmount =  (int) tmp;
         String cipherBlocks[][][] = getCipherBlocks(blockAmount);
-        cipherBlocks = XOR(cipherBlocks, cipherKey);
+        cipherBlocks = XOR(cipherBlocks, cipherKey,true);
         String output = "";
+
+       // String[][][] tmp1 = XOR(cipherBlocks, cipherKey, true);
+      //  String[][][] tmp2 = XOR(tmp1, cipherKey, false);
+
+        //cipherBlocks = windMatrix(cipherBlocks,getEncryptionKey().length());
 
         for(int count = 0; count < blockAmount; count++) {
             for(int i = 0; i < 128; i++) {
@@ -81,7 +88,10 @@ public class windingCipher extends CryptoMain {
 
         String output = "";
         String cipherBlocks[][][] = getCipherBlocks(blockAmount);
-        cipherBlocks = XOR(cipherBlocks, cipherKey);
+
+        //cipherBlocks = windMatrix(cipherBlocks,-getEncryptionKey().length());
+
+        cipherBlocks = XOR(cipherBlocks, cipherKey, false);
         for(int count = 0; count < blockAmount; count++) {
             for(int i = 0; i < 128; i++) {
                 for(int j = 0; j < 128; j++)
@@ -158,104 +168,61 @@ public class windingCipher extends CryptoMain {
         return  cipherKey;
     }
 
-    private String[][][] XOR(String[][][] plainText, String[][] key) {
+    private String[][][] XOR(String[][][] plainText, String[][] key, boolean forward) {
 
         System.out.println("DEBUG: Starting XOR!");
         int blockAmount = plainText.length;
         String[][][] cipherText = new String[blockAmount][128][128];
-        for (int blockCounter = 0; blockCounter < blockAmount; blockCounter++) {
-            for (int i = 0; i < 128; i++) {
-                for (int j = 0; j < 128; j++) {
-                    if (plainText[blockCounter][i][j] != null) {
+        System.out.println("DEBUG: XOR Successful!");
 
-                        /*occurs for first block*/
-                        long val1;
-                        long val2;
-
-                        if (blockCounter < 1)
-                            val1 = Character.digit(key[i][j].toCharArray()[0], 16);
-                        else
-                            val1 = Character.digit(plainText[blockCounter - 1][i][j].toCharArray()[0], 16);
-
-                        val2 = Character.digit(plainText[blockCounter][i][j].toCharArray()[0], 16);
-                        long result = (val1 ^ val2);
-                        cipherText[blockCounter][i][j] = Long.toHexString(result);
-                    } else
-                        break;
-                }
+        if(forward) {
+            cipherText[0] = XORBlock(key, plainText[0]);
+            for (int blockCounter = 1; blockCounter < blockAmount; blockCounter++) {
+                cipherText[blockCounter] = XORBlock(cipherText[blockCounter - 1], plainText[blockCounter]);
             }
+        }
+        else
+        {
+            for (int blockCounter = blockAmount - 1; blockCounter > 1; blockCounter--) {
+                cipherText[blockCounter] = XORBlock(plainText[blockCounter - 1], plainText[blockCounter]);
+            }
+
+            cipherText[0] = XORBlock(plainText[0], key);
         }
 
         System.out.println("DEBUG: XOR Successful!");
         return cipherText;
     }
 
-    private String[][] windMatrix(String[][] matrix, int degrees)
-    {
-        System.out.println("Winding Process Started!");
-        int n = 128;
-        //int A[][] = new int[n][n];
-        //int B[][] = new int[n][n];
-
-        String A[][] = new String[128][128];
-        String B[][] = matrix;
-
-        String[][] turnedMatrix = new String[128][128];
-        int  c1=0, c2=n-1, r1=0, r2=n-1;
-        int count=1;
-
-        String output = "";
-        for(int i = 0; i < 128; i++) {
+    private String[][] XORBlock(String[][] Block1, String[][] Block2) {
+        String[][] outBlock = new String[128][128];
+        for (int i = 0; i < 128; i++) {
             for (int j = 0; j < 128; j++) {
-                if (matrix[i][j] != null)
-                    output += matrix[i][j];
+
+                if (Block1[i][j] != null && Block2[i][j] != null) {
+                    long val1 = Character.digit(Block1[i][j].toCharArray()[0], 16);
+                    long val2 = Character.digit(Block2[i][j].toCharArray()[0], 16);
+                    long result = (val1 ^ val2);
+                    outBlock[i][j] = Long.toHexString(result);
+                }
+                else
+                    outBlock[i][j] = null;
             }
         }
+        return outBlock;
+    }
 
-        int k = 1;
-        while(count<=n*n)
-        {
+    private String[][][] windMatrix(String[][][] matrix, int degrees)
+    {
+        List<String[][]> list = new ArrayList<String[][]>();
+        for(int i = 0; i < matrix.length; i++)
+            list.add(matrix[i]);
 
-            for(int i=c1;i<=c2;i++)
-            {
-                A[r1][i] = Integer.toString(k++);//output.substring(count-1,count);
-                count++;
-            }
+        java.util.Collections.rotate(list, degrees);
 
-            for(int j=r1+1;j<=r2;j++)
-            {
-                A[j][c2]=Integer.toString(k++);//output.substring(count-1,count);
-                count++;
-            }
+        for(int i = 0; i < matrix.length; i++)
+            matrix[i] = list.get(i);
 
-            for(int i=c2-1;i>=c1;i--)
-            {
-                A[r2][i]= Integer.toString(k++);//output.substring(count-1,count);
-                count++;
-            }
-
-            for(int j=r2-1;j>=r1+1;j--)
-            {
-                A[j][c1]= Integer.toString(k++);//output.substring(count-1,count);
-                count++;
-            }
-
-            c1++;
-            c2--;
-            r1++;
-            r2--;
-        }
-
-
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<n;j++)
-            {
-                System.out.print(A[i][j]+ "\t");
-            }
-            System.out.println();
-        }
-
-        return  A;
+        return matrix;
     }
 }

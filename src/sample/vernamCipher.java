@@ -43,7 +43,7 @@ public class vernamCipher extends CryptoMain {
             long result = (val1^val2);
             out += Long.toHexString(result);
 
-                /*Resets key*/
+            /*Resets key*/
             if (j == cipherKey.length() - 1)
                 j = 0;
         }
