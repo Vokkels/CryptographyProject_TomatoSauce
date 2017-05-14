@@ -1,67 +1,74 @@
 package sample;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+//http://www.eqianli.tech/questions/4527927/encrypt-byte-array-using-vigenere-cipher-in-java
+//http://stackoverflow.com/questions/140131/convert-a-string-representation-of-a-hex-dump-to-a-byte-array-using-java
+//http://javarevisited.blogspot.co.za/2013/03/convert-and-print-byte-array-to-hex-string-java-example-tutorial.html
 
-/**
- * Created by Deltamike76 on 4/29/2017.
- */
 public class vigenereCipher extends CryptoMain
 {
-
     vigenereCipher()
     {
         super();
-        setEncryptionType(encryptionType.vigenereCipher);
+        setEncryptionType(encryptionType.vernamCipher);
     }
 
-    vigenereCipher(String fileLocation, String key)
+    vigenereCipher(String fileLocation, String key, boolean encrypt)
     {
         //Calls parent class
-        super();
-        //set the file location
-        this.setFileLocation(fileLocation);
+        super(fileLocation,key, encrypt);
         //Sets encryption type
         setEncryptionType(encryptionType.vigenereCipher);
+        setFile(true);
+    }
 
-        System.out.println("LOOK AT ME THIS IS MY KEY: " + key);
-
-        //set the encryption key
-        setEncryptionKey(key);
+    vigenereCipher(String message, String key)
+    {
+        //Calls parent class
+        super(message, key);
+        setFile(false);
+        setEncryptionType(encryptionType.vigenereCipher);
     }
 
     @Override
     public void encrypt()
     {
-        //repeat key to fill plaintext
-        OpenFile();
-        System.out.println(getEncryptionKey());
-        String plainText = getCipherText();
-        String key = getFilledKey(getEncryptionKey(),plainText.length());
-        System.out.println(key);
 
+        char[] keyChars = getEncryptionKey().toCharArray();
+        byte[] bytes = hexStringToByteArray(getCipherText());
+        byte[] temp = bytes;
+        for (int i = 0; i < temp.length; i++) {
+            int keyNR = keyChars[i % keyChars.length] - 32;
+            int c = bytes[i] & 255;
+            if ((c >= 32) && (c <= 127)) {
+                int x = c - 32;
+                x = (x + keyNR) % 96;
+                bytes[i] = (byte) (x + 32);
+            }
+        }
+        String out = bytesToHexString(bytes);
+        System.out.println(out);
+        setCipherText(out);
+        finalizeCipher();
     }
 
     @Override
     public void decrypt()
     {
-
-    }
-
-    private String getFilledKey(String key, int length)
-    {
-        String out = "";
-        for(int i = 0, j = 0; i < length; i++)
-        {
-            if(j < key.length()) {
-                out += key.charAt(j);
-                j++;
-            }
-            else{
-                j = 0;
-                out += key.charAt(j);
+        char[] keyChars = getEncryptionKey().toCharArray();
+        byte[] bytes = hexStringToByteArray(getCipherText());
+        byte[] temp = bytes;
+        for (int i = 0; i < temp.length; i++) {
+            int keyNR = keyChars[i % keyChars.length] - 32;
+            int c = bytes[i] & 255;
+            if ((c >= 32) && (c <= 127)) {
+                int x = c - 32;
+                x = (x - keyNR + 96) % 96;
+                bytes[i] = (byte) (x + 32);
             }
         }
-        return out;
+        String out = bytesToHexString(bytes);
+        System.out.println(out);
+        setCipherText(out);
+        finalizeCipher();
     }
 }

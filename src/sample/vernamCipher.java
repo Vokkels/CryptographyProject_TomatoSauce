@@ -11,25 +11,28 @@ public class vernamCipher extends CryptoMain {
         setEncryptionType(encryptionType.vernamCipher);
     }
 
-    vernamCipher(String fileLocation, String key)
+    vernamCipher(String fileLocation, String key, boolean encrypt)
     {
         //Calls parent class
-        super();
-        //set the file location
-        this.setFileLocation(fileLocation);
+        super(fileLocation,key, encrypt);
         //Sets encryption type
-        setEncryptionType(encryptionType.vigenereCipher);
+        setEncryptionType(encryptionType.vernamCipher);
+        setFile(true);
+    }
 
-        //set the encryption key
-        setEncryptionKey(key);
+    vernamCipher(String message, String key)
+    {
+        //Calls parent class
+        super(message, key);
+        setFile(false);
+        setEncryptionType(encryptionType.vernamCipher);
     }
 
     @Override
     public void encrypt()
     {
-        OpenFile();
         //Converts the text key to binary
-        String cipherKey = convertToHex(getEncryptionKey());
+        String cipherKey =  convertToHex(getEncryptionKey());
         //Create empty output String
         String plainText = getCipherText();
         String out = "";
@@ -43,20 +46,19 @@ public class vernamCipher extends CryptoMain {
             long result = (val1^val2);
             out += Long.toHexString(result);
 
-            /*Resets key*/
+                /*Resets key*/
             if (j == cipherKey.length() - 1)
                 j = 0;
         }
 
         setCipherText(out);
         System.out.println("DEBUG: Starting Vernam Cipher Finished Successfully!");
-        SaveFile(true);
+        finalizeCipher();
     }
 
     @Override
     public void decrypt()
     {
-        OpenFile();
         //Converts the text key to binary
         String cipherKey = convertToHex(getEncryptionKey());
         //Create empty output String
@@ -79,6 +81,7 @@ public class vernamCipher extends CryptoMain {
 
         setCipherText(out);
         System.out.println("DEBUG: Starting Vernam Cipher Finished Successfully!");
-        SaveFile(false);
+        System.out.println("Decrypt: " + out);
+        finalizeCipher();
     }
 }

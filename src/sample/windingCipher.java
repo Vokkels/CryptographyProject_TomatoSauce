@@ -15,24 +15,26 @@ public class windingCipher extends CryptoMain {
         setEncryptionType(encryptionType.windingCipher);
     }
 
-    windingCipher(String fileLocation, String key)
+    windingCipher(String fileLocation, String key, boolean encrypt)
     {
         //Calls parent class
-        super();
-        //set the file location
-        this.setFileLocation(fileLocation);
+        super(fileLocation,key, encrypt);
         //Sets encryption type
         setEncryptionType(encryptionType.windingCipher);
+        setFile(true);
+    }
 
-        //set the encryption key
-        setEncryptionKey(key);
+    windingCipher(String message, String key)
+    {
+        //Calls parent class
+        super(message, key);
+        setFile(false);
+        setEncryptionType(encryptionType.windingCipher);
     }
 
     @Override
     public void encrypt()
     {
-        OpenFile();
-
         /*Create key block*/
         String cipherKeyTmp = convertToHex(getEncryptionKey());
         String[][] cipherKey = getCipherKey(cipherKeyTmp);
@@ -41,11 +43,6 @@ public class windingCipher extends CryptoMain {
         String cipherBlocks[][][] = getCipherBlocks(blockAmount);
         cipherBlocks = XOR(cipherBlocks, cipherKey,true);
         String output = "";
-
-       // String[][][] tmp1 = XOR(cipherBlocks, cipherKey, true);
-      //  String[][][] tmp2 = XOR(tmp1, cipherKey, false);
-
-        //cipherBlocks = windMatrix(cipherBlocks,getEncryptionKey().length());
 
         for(int count = 0; count < blockAmount; count++) {
             for(int i = 0; i < 128; i++) {
@@ -74,13 +71,19 @@ public class windingCipher extends CryptoMain {
 
         setCipherText(output);
         System.out.println(output);
-        SaveFile(true);
+        finalizeCipher();
 }
 
     @Override
     public void decrypt()
     {
-        OpenFile();
+
+        /*
+        String st1 = "Hello Pola";
+        String st2 = convertToHex(st1);
+        String st3 = convertHexToPlain(st2);
+        */
+
         String cipherKeyTmp = convertToHex(getEncryptionKey());
         String[][] cipherKey = getCipherKey(cipherKeyTmp);
         double tmp  = Math.round((getCipherText().length()/(128*128))+0.5);
@@ -104,30 +107,10 @@ public class windingCipher extends CryptoMain {
             }
         }
 
-        setCipherText(output);
-        SaveFile(false);
-        /*
-        for(int count = 0; count < blockAmount; count++) {
-            cipherBlocks[count] = windMatrix(cipherBlocks[count], -30);
-        }
-
-        String[][][] xor = XOR(cipherBlocks, cipherKey);
-        String output = "";
-        for(int count = 0; count < blockAmount; count++) {
-            String[][] windedMatrix = cipherBlocks[count];
-            for(int i = 0; i < 128; i++) {
-                for (int j = 0; j < 128; j++) {
-                    if(windedMatrix[i][j] != null)
-                        output += windedMatrix[i][j];
-                    else
-                        break;
-                }
-            }
-        }
-
-        setCipherText(output);
         System.out.println(output);
-        SaveFile(false);*/
+        System.out.println(convertHexToPlain(output));
+        setCipherText(output);
+        finalizeCipher();
     }
 
     private String[][][] getCipherBlocks(int blockAmount)

@@ -1,30 +1,62 @@
 package sample;
 
+import sun.nio.cs.US_ASCII;
+import sun.text.normalizer.UTF16;
+
 import java.io.*;
 import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
+import static sample.Controller.cm;
+
 class CryptoMain implements Serializable {
 
     private String fileLocation;
+    private String message;
     private String cipherText;
     private String cipherBits;
     private encryptionType Type;
     private String encryptionKey;
+    private boolean isFile;
+
+    private boolean wasEncrypted;
 
     public enum encryptionType {transpositionCipher, vigenereCipher, vernamCipher, windingCipher}
-
-    ;
 
     CryptoMain() {
         fileLocation = "";
         cipherText = null;
     }
 
-    CryptoMain(String fileLocation) {
-        this.fileLocation = fileLocation;
-        cipherText = null;
+    /**
+     Called When a Cipher has a file location and
+     wants to open a message
+     Takes message location as a param
+     * */
+    CryptoMain(String _fileLocation, String _key, boolean _encrypt) {
+
+        setFileLocation(_fileLocation);
+        setEncryptionKey(_key);
+        setWasEncrypted(_encrypt);
+        setCipherText(null);
+        setCipherBits(null);
+
+        /*Opens the File*/
+        OpenFile();
+    }
+
+    /**
+    Called when a cipher has to work with a
+    message and. Takes the message and key as
+    a parameter
+     */
+    CryptoMain(String _message, String _key){
+
+        setEncryptionKey(_key);
+        String tmpMsg = convertToHex(_message);
+        setCipherText(tmpMsg);
+        setWasEncrypted(false);
     }
 
     /*Returns the Object of the opened File*/
@@ -95,7 +127,71 @@ class CryptoMain implements Serializable {
     }
 
     public static String convertToHex(String text) {
-        return String.format("%040x", new BigInteger(1, text.getBytes(StandardCharsets.UTF_16)));
+        StringBuilder hex = new StringBuilder();
+
+        for (int i=0; i < text.length(); i++) {
+            hex.append(Integer.toHexString(text.charAt(i)));
+        }
+        return hex.toString();
+        //return String.format("%040x", new BigInteger(1, text.getBytes(StandardCharsets.UTF_16)));
+    }
+
+    //Convert BYTE Array to HEX string
+    public String bytesToHexString(byte[] bytes)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes)
+            sb.append(String.format("%02x",b&0xff));
+        return sb.toString();
+    }
+
+    //Convert HEX to BYTE Array
+    public byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
+
+    public static String convertHexToPlain(String hexString)
+    {
+        if(hexString.length()%2 != 0){
+            System.err.println("requires EVEN number of chars");
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+
+        for( int i=0; i <  hexString.length() -1; i+=2 ){
+               /*
+                * Grab the hex in pairs
+                */
+        String output = hexString.substring(i, (i + 2));
+              /*
+               * Convert Hex to Decimal
+               */
+        int decimal = Integer.parseInt(output, 16);
+        sb.append((char)decimal);
+    }
+        return sb.toString();
+    }
+
+    /**
+     Called at the end of a cypher to finalize
+     the algorithm
+    * */
+    public void finalizeCipher()
+    {
+        if(getIsFile())
+        {
+            SaveFile(getWasEncrypted());
+        }
+        else
+        {
+            setCipherText(convertHexToPlain(getCipherText()));
+        }
     }
 
     public void encrypt()
@@ -126,6 +222,10 @@ class CryptoMain implements Serializable {
 
     public void setCipherBits(String _newCipherBits){this.cipherBits = _newCipherBits;}
 
+    public void setFile(Boolean _isFile){this.isFile = _isFile;}
+
+    public void setWasEncrypted(boolean wasEncrypted) {this.wasEncrypted = wasEncrypted;}
+
     public String getFileLocation() {
         return this.fileLocation;
     }
@@ -142,40 +242,82 @@ class CryptoMain implements Serializable {
     {
         return this.Type;
     }
+
+    public boolean getIsFile(){return this.isFile;}
+
+    public boolean getWasEncrypted() {return wasEncrypted;}
+
 }
 
-class CryptoSelect
+class CryptoSelect_File
 {
-    CryptoSelect(CryptoMain.encryptionType type, String fileLocation, String key, boolean encrypt)
+    CryptoSelect_File(CryptoMain.encryptionType type, String fileLocation, String key, boolean encrypt)
     {
-
-        CryptoMain crypto = null;
+        cm = null;
         switch (type)
         {
             case transpositionCipher:
                 System.out.println("DEBUG: transpositionCipher Selected");
-                crypto = new TranspositionCipher(fileLocation, key);
+                cm = new TranspositionCipher(fileLocation, key, encrypt);
                 break;
 
             case vigenereCipher:
                 System.out.println("DEBUG: vigenereCipher Selected");
-                crypto = new vigenereCipher(fileLocation, key);
+                cm = new vigenereCipher(fileLocation, key, encrypt);
                 break;
 
             case vernamCipher:
                 System.out.println("DEBUG: vernamCipher Selected");
-                crypto = new vernamCipher(fileLocation, key);
+                cm = new vernamCipher(fileLocation, key, encrypt);
                 break;
 
             case windingCipher:
                 System.out.println("DEBUG: windingCipher Selected");
-                crypto = new windingCipher(fileLocation, key);
+                cm = new windingCipher(fileLocation, key, encrypt);
                 break;
 
         }
         if(encrypt)
-            crypto.encrypt();
+            cm.encrypt();
         else
-            crypto.decrypt();
+            cm.decrypt();
+    }
+}
+
+class CryptoSelect_Msg
+{
+    CryptoSelect_Msg(CryptoMain.encryptionType type, String Message, String key, boolean encrypt)
+    {
+        cm = null;
+        switch (type)
+        {
+            case transpositionCipher:
+                System.out.println("DEBUG: transpositionCipher Selected");
+                cm = new TranspositionCipher(Message, key);
+                break;
+
+            case vigenereCipher:
+                System.out.println("DEBUG: vigenereCipher Selected");
+                cm = new vigenereCipher(Message, key);
+                break;
+
+            case vernamCipher:
+                System.out.println("DEBUG: vernamCipher Selected");
+                cm = new vernamCipher(Message, key);
+                break;
+
+            case windingCipher:
+                System.out.println("DEBUG: windingCipher Selected");
+                cm = new windingCipher(Message, key);
+                break;
+
+        }
+
+        cm.setWasEncrypted(false);
+
+        if(encrypt)
+            cm.encrypt();
+        else
+            cm.decrypt();
     }
 }

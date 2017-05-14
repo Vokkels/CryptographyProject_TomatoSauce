@@ -8,26 +8,26 @@ public class TranspositionCipher extends CryptoMain
     TranspositionCipher()
     {
         super();
-        setEncryptionType(encryptionType.transpositionCipher);
+        setEncryptionType(encryptionType.vernamCipher);
     }
 
-    TranspositionCipher(String fileLocation, String key) {
+    TranspositionCipher(String fileLocation, String key, boolean encrypt)
+    {
         //Calls parent class
-        super();
-        //set the file location
-        this.setFileLocation(fileLocation);
+        super(fileLocation,key, encrypt);
         //Sets encryption type
-        setEncryptionType(encryptionType.transpositionCipher);
+        setEncryptionType(encryptionType.vigenereCipher);
+    }
 
-        //set the encryption key
-        setEncryptionKey(key);
+    TranspositionCipher(String message, String key)
+    {
+        //Calls parent class
+        super(message, key);
     }
 
     @Override
     public void encrypt()
     {
-        OpenFile();
-
         int[] keyPosition = rearrangeKey(getEncryptionKey());
         String cipherTxt = getCipherText();
         System.out.println(cipherTxt);
@@ -35,10 +35,6 @@ public class TranspositionCipher extends CryptoMain
         int cipherTxtLength = cipherTxt.length();
 
         System.out.println("DEBUG: Starting Transposition Cipher encryption!");
-
-
-
-
 
         int row = (int) Math.ceil((double) cipherTxtLength / keyLength);
 
@@ -71,14 +67,12 @@ public class TranspositionCipher extends CryptoMain
         setCipherText(encryptedCipherTxt);
         System.out.println(encryptedCipherTxt);
         System.out.println("DEBUG: Transposition Cipher encrypt Successfully!");
-        SaveFile(true);
+        finalizeCipher();
     }
 
     @Override
     public void decrypt()
     {
-        OpenFile();
-
         int[] keyPosition = rearrangeKey(getEncryptionKey());
         String cipherTxt = getCipherText();
         int keyLength = keyPosition.length;
@@ -110,7 +104,7 @@ public class TranspositionCipher extends CryptoMain
         setCipherText(decryptedCipherTxt);
         System.out.println(decryptedCipherTxt);
         System.out.println("DEBUG: Transposition Cipher decrypt Successfully!");
-        SaveFile(false);
+        finalizeCipher();
     }
 
     public char RandomAlpha()
