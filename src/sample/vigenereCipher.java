@@ -29,6 +29,8 @@ public class vigenereCipher extends CryptoMain
         setEncryptionType(encryptionType.vigenereCipher);
     }
 
+    public char temp;
+
     @Override
     public void encrypt()
     {
