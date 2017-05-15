@@ -1,7 +1,9 @@
 package sample;
 
-import java.util.Arrays;
-import java.util.Random;
+import com.sun.deploy.util.ArrayUtil;
+
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class TranspositionCipher extends CryptoMain
 {
@@ -17,115 +19,187 @@ public class TranspositionCipher extends CryptoMain
         super(fileLocation,key, encrypt);
         //Sets encryption type
         setEncryptionType(encryptionType.vigenereCipher);
+        setFile(true);
     }
 
     TranspositionCipher(String message, String key)
     {
         //Calls parent class
         super(message, key);
+        setFile(false);
+        setEncryptionType(encryptionType.vernamCipher);
     }
 
     @Override
     public void encrypt()
     {
-        int[] keyPosition = rearrangeKey(getEncryptionKey());
-        String cipherTxt = getCipherText();
-        System.out.println(cipherTxt);
-        int keyLength = keyPosition.length;
-        int cipherTxtLength = cipherTxt.length();
-
         System.out.println("DEBUG: Starting Transposition Cipher encryption!");
+        String cipherKey =  getEncryptionKey();
+        String data = getCipherText();
 
-        int row = (int) Math.ceil((double) cipherTxtLength / keyLength);
+        int keyLength = cipherKey.length();
+        int dataLength = data.length();
 
-        char[][] table = new char[row][keyLength];
-        int k = 0;
-        for (int r = 0; r < row; r++)
-            for (int c = 0; c < keyLength; c++)
-            {
-                if (cipherTxtLength == k)
-                {
-                    table[r][c] = RandomAlpha();
-                    k--;
-                }
+        /*Establishes table size for perfect data fit*/
+        int columns ;
+        for(columns = keyLength; columns < data.length(); columns--)
+            if(dataLength % columns == 0)
+                break;
+
+        int[] keyValue;
+        /*Adjust Key According to mod*/
+        if(columns < keyLength) {
+            keyLength = columns;
+            keyValue = getKeyValueRepresentation(cipherKey.substring(0, keyLength));
+        }
+        else
+            keyValue = getKeyValueRepresentation(cipherKey);
+
+        System.out.println("MOD: " + columns);
+        System.out.println("LEN: " + data.length());
+
+        int rows = Math.abs(Math.round((dataLength/columns) + 0.5f)) - 1;
+
+        String[][] table = new String[rows][columns];
+
+        /*Reads data into the table*/
+        for(int col = 0, cnt = 0; col < table.length; col++)
+            for(int row = 0; row < table[0].length; row++, cnt++) {
+
+                if(cnt < data.length())
+                    table[col][row] = data.substring(cnt, cnt + 1);
                 else
-                    table[r][c] = cipherTxt.charAt(k);
-                k++;
+                    table[col][row] = getRandomVal();
             }
 
-        String encryptedCipherTxt = "";
-        for (int x = 0; x < keyLength; x++) {
-            for (int y = 0; y < keyLength; y++) {
-                if (x == keyPosition[y]) {
-                    for (int a = 0; a < row; a++) {
-                        encryptedCipherTxt += table[a][y];
-                    }
-                }
+         /*Prints key values*/
+         for(int i = 0; i < keyLength; i++)
+             System.out.print(keyValue[i] + " ");
+
+        System.out.println(" ");
+
+        /*Prints out the Table*/
+        for(int col = 0; col < table.length; col++) {
+            for (int row = 0; row < table[0].length; row++) {
+                System.out.print(table[col][row] + " ");
             }
+            System.out.println("");
         }
 
-        setCipherText(encryptedCipherTxt);
-        System.out.println(encryptedCipherTxt);
-        System.out.println("DEBUG: Transposition Cipher encrypt Successfully!");
+        String output = "";
+
+        int[] tmpKeyValue = new int[keyLength];
+        for(int i = 0; i < keyValue.length; i++)
+            tmpKeyValue[i] = keyValue[i];
+
+        Arrays.sort(tmpKeyValue);
+        for(int i = 0; i < columns; i++)
+        {
+            int val = findValAtArrayIndex(keyValue, tmpKeyValue[i]);
+            System.out.println("COL: " + val);
+            for(int j = 0; j < rows; j++)
+                output += table[j][val];
+        }
+
+        System.out.println("Output Length: " + output.length());
+        System.out.println("Output: " + convertHexToPlain(output));
+        setCipherText(output);
         finalizeCipher();
+        System.out.println("DEBUG: Transposition Cipher encrypt Successfully!");
     }
 
     @Override
-    public void decrypt()
-    {
-        int[] keyPosition = rearrangeKey(getEncryptionKey());
-        String cipherTxt = getCipherText();
-        int keyLength = keyPosition.length;
-        int cipherTxtLength = cipherTxt.length();
-
+    public void decrypt() {
         System.out.println("DEBUG: Starting Transposition Cipher decryption!");
-        System.out.println(cipherTxt);
-        int row = (int) Math.ceil((double) cipherTxtLength / keyLength);
 
-        String regex = "(?<=\\G.{" + row + "})";
-        String[] get = cipherTxt.split(regex);
+        String cipherKey =  getEncryptionKey();
+        String data = getCipherText();
 
-        String[][] table = new String[row][keyLength];
-        for (int x = 0; x < keyLength; x++) {
-            for (int y = 0; y < keyLength; y++) {
-                if (keyPosition[x] == y) {
-                    for (int z = 0; z < row; z++) {
-                        table[z][y] = get[keyPosition[y]].substring(z, z + 1);
-                    }
-                }
-            }
+        int keyLength = cipherKey.length();
+        int dataLength = data.length();
+        System.out.println("Length " + dataLength);
+        /*Establishes table size for perfect data fit*/
+        int columns ;
+        for(columns = keyLength; columns < data.length(); columns--)
+            if(dataLength % columns == 0)
+                break;
+
+        int[] keyValue;
+        /*Adjust Key According to mod*/
+        if(columns < keyLength) {
+            keyLength = columns;
+            keyValue = getKeyValueRepresentation(cipherKey.substring(0, keyLength));
+        }
+        else
+            keyValue = getKeyValueRepresentation(cipherKey);
+
+        System.out.println("MOD: " + columns);
+        System.out.println("LEN: " + data.length());
+
+        int rows = Math.abs(Math.round((dataLength/columns) + 0.5f)) - 1;
+
+        String[][] table = new String[rows][columns];
+
+        int[] tmpKeyValue = new int[keyLength];
+        for(int i = 0; i < keyValue.length; i++)
+            tmpKeyValue[i] = keyValue[i];
+
+        String input = "";
+        Arrays.sort(tmpKeyValue);
+        Collections.reverse(Arrays.asList(tmpKeyValue));
+
+        System.out.println(data);
+
+        for(int i = 0, cnt = 0; i < columns; i++)
+        {
+            int val = findValAtArrayIndex(keyValue, tmpKeyValue[i]);
+            System.out.println("COL: " + val);
+            for(int j = 0; j < rows; j++, cnt++)
+                table[j][val] = data.substring(cnt, cnt + 1);
         }
 
-        String decryptedCipherTxt = "";
-        for (int x = 0; x < row; x++)
-            for (int y = 0; y < keyLength; y++)
-                decryptedCipherTxt += table[x][y];
+          /*Prints out the Table*/
+        for(int col = 0; col < table.length; col++) {
+            for (int row = 0; row < table[0].length; row++) {
+                System.out.print(table[col][row] + " ");
+            }
+            System.out.println("");
+        }
 
-        setCipherText(decryptedCipherTxt);
-        System.out.println(decryptedCipherTxt);
-        System.out.println("DEBUG: Transposition Cipher decrypt Successfully!");
+        for(int col = table.length - 1; col > 0; col--)
+            for (int row = table[0].length - 1; row > 0; row--)
+                input += table[col][row];
+
+        setCipherText(input);
         finalizeCipher();
+
+        System.out.println("DEBUG: Transposition Cipher decrypt Successful!");
     }
 
-    public char RandomAlpha()
+    private int[] getKeyValueRepresentation(String key)
     {
-        Random r = new Random();
-        return (char)(r.nextInt(26) + 'a');
+        int length = key.length();
+        int[] keyVal = new int[length];
+        for(int i = 0; i < length; i++)
+            keyVal[i] = key.charAt(i) - 48;
+
+        return keyVal;
     }
 
-    public int[] rearrangeKey(String key)
+    private String getRandomVal()
     {
-        String[] keys = key.split("");
-        Arrays.sort(keys);
-        int[] num = new int[key.length()];
-        for (int x = 0; x < keys.length; x++)
-            for (int y = 0; y < key.length(); y++)
-                if (keys[x].equals(key.charAt(y) + ""))
-                {
-                    num[y] = x;
-                    break;
-                }
-        return num;
+        return String.format("%x",(int)(Math.random()*100)).substring(0,1);
+    }
+
+    private int findValAtArrayIndex(int[] array, int val)
+    {
+        for(int i = 0; i < array.length; i++)
+        {
+            if(val == array[i])
+                return i;
+        }
+
+        return -1;
     }
 }
 
