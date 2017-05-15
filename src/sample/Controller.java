@@ -101,7 +101,6 @@ public class Controller {
         inputTxt.setText(message);
     }
 
-
     public void runCipher(boolean encrypt)
     {
         if(tglFile.isSelected())
@@ -110,6 +109,7 @@ public class Controller {
         }
         else if(tglType.isSelected())
         {
+            //inputTxt.setText("Hello MottoHello MottoHello MottoHello Motto");
             new CryptoSelect_Msg(radioButtons(), getMessageTyped(), getKey(),encrypt);
             setMessage(cm.getCipherText());
         }

@@ -1,11 +1,17 @@
 package sample;
 
+import java.io.Serializable;
+import org.apache.commons.codec.binary.Hex;
+import com.sun.javafx.scene.layout.region.Margins;
+import com.sun.xml.internal.ws.commons.xmlutil.Converter;
+import org.omg.IOP.Encoding;
 import sun.nio.cs.US_ASCII;
 import sun.text.normalizer.UTF16;
 
 import java.io.*;
 import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static sample.Controller.cm;
@@ -127,12 +133,9 @@ class CryptoMain implements Serializable {
     }
 
     public static String convertToHex(String text) {
-        StringBuilder hex = new StringBuilder();
 
-        for (int i=0; i < text.length(); i++) {
-            hex.append(Integer.toHexString(text.charAt(i)));
-        }
-        return hex.toString();
+        byte[] bytes = text.getBytes();
+        return Hex.encodeHexString(bytes);
         //return String.format("%040x", new BigInteger(1, text.getBytes(StandardCharsets.UTF_16)));
     }
 
@@ -146,7 +149,7 @@ class CryptoMain implements Serializable {
     }
 
     //Convert HEX to BYTE Array
-    public byte[] hexStringToByteArray(String s) {
+    public byte[] convertHexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
@@ -156,26 +159,65 @@ class CryptoMain implements Serializable {
         return data;
     }
 
+    public String convertByteAToString(byte[] bytes)
+    {
+        try {
+            String decoded = new String(bytes, "ISO-8859-1");
+            return decoded;
+        }catch (Exception x) {System.out.println(x.getMessage());}
+        return null;
+    }
+
+    public byte[] convertStringToByteA(String input)
+    {
+        try{
+            byte[] encoded = input.getBytes("ISO-8859-1");
+            return encoded;
+        }
+        catch (Exception x) {System.out.println(x.getMessage());}
+        return null;
+    }
+
+    public String convertByteStringToASCII(String input)
+    {
+        try {
+
+        }
+        catch (Exception x){ System.out.println(x.getMessage());}
+            return null;
+
+
+    }
+
     public static String convertHexToPlain(String hexString)
     {
-        if(hexString.length()%2 != 0){
+        try {
+
+            char[] tmp = hexString.toCharArray();
+            byte[] bytes = Hex.decodeHex(tmp);
+            return new String(bytes, "ISO-8859-1");
+
+        }
+        catch (Exception x)
+        {
+            System.out.println(x.getMessage());
+        }
+
+        return null;
+
+       /* if(hexString.length()%2 != 0){
             System.err.println("requires EVEN number of chars");
             return null;
         }
         StringBuilder sb = new StringBuilder();
 
         for( int i=0; i <  hexString.length() -1; i+=2 ){
-               /*
-                * Grab the hex in pairs
-                */
+
         String output = hexString.substring(i, (i + 2));
-              /*
-               * Convert Hex to Decimal
-               */
-        int decimal = Integer.parseInt(output, 16);
+          ger.parseInt(output, 16);
         sb.append((char)decimal);
     }
-        return sb.toString();
+        return sb.toString();*/
     }
 
     /**
@@ -186,22 +228,24 @@ class CryptoMain implements Serializable {
     {
         if(getIsFile())
         {
+            /*File Encryption Method*/
             SaveFile(getWasEncrypted());
         }
         else
         {
+            /*Message Encryption Method*/
             setCipherText(convertHexToPlain(getCipherText()));
         }
     }
 
     public void encrypt()
     {
-        System.out.print("Override Needed!");
+        System.out.print("Override Required!");
     }
 
     public void decrypt()
     {
-        System.out.println("Override Needed!");
+        System.out.println("Override Required!");
     }
 
     public void setFileLocation(String fileLocation) {
