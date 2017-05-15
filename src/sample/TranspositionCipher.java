@@ -102,11 +102,11 @@ public class TranspositionCipher extends CryptoMain
         }
 
         System.out.println("Output Length: " + output.length());
+        System.out.println("Output: " + convertHexToPlain(output));
         setCipherText(output);
         finalizeCipher();
         System.out.println("DEBUG: Transposition Cipher encrypt Successfully!");
     }
-
 
     @Override
     public void decrypt() {
@@ -147,12 +147,15 @@ public class TranspositionCipher extends CryptoMain
         String input = "";
         Arrays.sort(tmpKeyValue);
         Collections.reverse(Arrays.asList(tmpKeyValue));
-        for(int i = 0, cnt = 0; i < columns; i++, cnt++)
+
+        System.out.println(data);
+
+        for(int i = 0, cnt = 0; i < columns; i++)
         {
             int val = findValAtArrayIndex(keyValue, tmpKeyValue[i]);
             System.out.println("COL: " + val);
-            for(int j = 0; j < rows; j++)
-                table[j][val] = data.substring(cnt, cnt++);
+            for(int j = 0; j < rows; j++, cnt++)
+                table[j][val] = data.substring(cnt, cnt + 1);
         }
 
           /*Prints out the Table*/
@@ -163,8 +166,12 @@ public class TranspositionCipher extends CryptoMain
             System.out.println("");
         }
 
-        //setCipherText(output);
-        //finalizeCipher();
+        for(int col = table.length - 1; col > 0; col--)
+            for (int row = table[0].length - 1; row > 0; row--)
+                input += table[col][row];
+
+        setCipherText(input);
+        finalizeCipher();
 
         System.out.println("DEBUG: Transposition Cipher decrypt Successful!");
     }
