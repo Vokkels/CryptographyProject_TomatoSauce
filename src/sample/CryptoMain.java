@@ -61,10 +61,10 @@ class CryptoMain implements Serializable {
     CryptoMain(String _message, String _key){
 
         setEncryptionKey(_key);
-        String tmpMsg = convertToHex(_message);
-        System.out.println("MSG: " + tmpMsg);
-        setCipherText(tmpMsg);
-        setWasEncrypted(false);
+        if(Controller.useNormalASCII)
+            setCipherText(_message);
+        else
+            setCipherText(convertToHex(_message));
     }
 
     /*Returns the Object of the opened File*/
@@ -88,8 +88,6 @@ class CryptoMain implements Serializable {
             System.out.println("DEBUG: Byte data convection successful!");
             FIS.close();
             setCipherText(sb.toString());
-            //cipherBytes = DatatypeConverter.parseHexBinary(sb.toString());
-            //setCipherBits(convertToBits(sb.toString()));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -138,7 +136,6 @@ class CryptoMain implements Serializable {
 
         byte[] bytes = text.getBytes();
         return Hex.encodeHexString(bytes);
-        //return String.format("%040x", new BigInteger(1, text.getBytes(StandardCharsets.UTF_16)));
     }
 
     //Convert BYTE Array to HEX string
@@ -237,7 +234,10 @@ class CryptoMain implements Serializable {
         {
             /*Message Encryption Method*/
             System.out.println("DEBUG: FINALIZED: " + getCipherText());
-            setCipherText(convertHexToPlain(getCipherText()));
+
+            if(!Controller.useNormalASCII)
+                setCipherText(convertHexToPlain(getCipherText()));
+
         }
 
         /** Update Progress Bar*/
@@ -360,8 +360,11 @@ class CryptoSelect_Msg
                 System.out.println("DEBUG: windingCipher Selected");
                 cm = new windingCipher(Message, key);
                 break;
-
         }
+
+        /** Sets the state of the cipher text */
+        cm.setWasEncrypted(encrypt);
+        System.out.println(cm.getWasEncrypted());
 
         if(encrypt)
             cm.encrypt();

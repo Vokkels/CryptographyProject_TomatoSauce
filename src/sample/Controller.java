@@ -23,7 +23,7 @@ public class Controller {
     private boolean isFile;
     public static int progress;
     private boolean threadStarted;
-
+    public static boolean useNormalASCII;
 
     @FXML
     private ToggleButton tglType;
@@ -59,22 +59,29 @@ public class Controller {
     }
 
     public void encryptFile(ActionEvent actionEvent) {
-        runCipher(true);
-    }
+        runCipher(true);}
 
     public void decryptFile(ActionEvent actionEvent) {
         runCipher(false);
     }
 
     public CryptoMain.encryptionType radioButtons() {
-        if (transposition.isSelected())
+        if (transposition.isSelected()) {
+            useNormalASCII = true;
             return CryptoMain.encryptionType.transpositionCipher;
-        if (vigenere.isSelected())
+        }
+        if (vigenere.isSelected()) {
+            useNormalASCII = false;
             return CryptoMain.encryptionType.vigenereCipher;
-        if (vernam.isSelected())
+        }
+        if (vernam.isSelected()) {
+            useNormalASCII = false;
             return CryptoMain.encryptionType.vernamCipher;
-        if (winding.isSelected())
+        }
+        if (winding.isSelected()) {
+            useNormalASCII = false;
             return CryptoMain.encryptionType.windingCipher;
+        }
         return null;
     }
 
@@ -118,8 +125,6 @@ public class Controller {
 
         progress = 0;
 
-
-
         //thread.cancel();
         try {
             if (!threadStarted) {
@@ -145,8 +150,10 @@ public class Controller {
             //new CryptoSelect_File(radioButtons(), getFileLocation(), getKey(), encrypt);
         } else if (tglType.isSelected()) {
             System.out.println("MSG: " + CryptoMain.convertToHex(getMessageTyped()));
-            new CryptoSelect_Msg(radioButtons(), getMessageTyped().trim(), getKey(), encrypt);
 
+            //cipherThread.threadedAlgo_MSG(radioButtons(), getMessageTyped(), getKey(), encrypt);
+            //executor.execute(cipherThread);
+            new CryptoSelect_Msg(radioButtons(), getMessageTyped().trim(), getKey(), encrypt);
             setMessage(cm.getCipherText());
         } else System.out.println("No Input Type Selected!");
 
@@ -186,18 +193,6 @@ public class Controller {
                         i = Math.round((int) Controller.progress);
                         updateProgress(i, 100);
                     }
-                       /* while(thread.isRunning()) {
-                            int prog = Controller.progress;
-                            System.out.println("fagf");
-                            if(prog != 100)
-                                updateProgress(prog, 100);
-                            else thread.cancel();
-                        }*/
-
-                        /*for (i = 0; i < 1000; i++) {
-                            updateProgress(i, 1000);
-                            Thread.sleep(10);
-                        }*/
                     return i;
                 }
             };
@@ -220,7 +215,6 @@ public class Controller {
             this.key = _key;
             this.encrypt = encrypt;
             isFile = true;
-            //Platform.runLater(new threadedAlgo());
         }
 
         public void threadedAlgo_MSG(CryptoMain.encryptionType _type, String _message, String _key, boolean encrypt)
@@ -230,7 +224,6 @@ public class Controller {
             this.key = _key;
             this.encrypt = encrypt;
             isFile = false;
-            //run();
         }
 
         @Override

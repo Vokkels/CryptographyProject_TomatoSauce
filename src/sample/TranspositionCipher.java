@@ -10,7 +10,7 @@ public class TranspositionCipher extends CryptoMain
     TranspositionCipher()
     {
         super();
-        setEncryptionType(encryptionType.vernamCipher);
+        setEncryptionType(encryptionType.transpositionCipher);
     }
 
     TranspositionCipher(String fileLocation, String key, boolean encrypt)
@@ -18,7 +18,7 @@ public class TranspositionCipher extends CryptoMain
         //Calls parent class
         super(fileLocation,key, encrypt);
         //Sets encryption type
-        setEncryptionType(encryptionType.vigenereCipher);
+        setEncryptionType(encryptionType.transpositionCipher);
         setFile(true);
     }
 
@@ -27,7 +27,7 @@ public class TranspositionCipher extends CryptoMain
         //Calls parent class
         super(message, key);
         setFile(false);
-        setEncryptionType(encryptionType.vernamCipher);
+        setEncryptionType(encryptionType.transpositionCipher);
         System.out.println("MSG " + convertToHex(message));
         System.out.println("Input " + getCipherText());
     }
