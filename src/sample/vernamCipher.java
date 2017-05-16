@@ -3,7 +3,7 @@ package sample;
 import javafx.concurrent.Service;
 
 /**
- * Created by Deltamike276 on 4/29/2017.
+ * @author Schalk Pretoruis
  */
 public class vernamCipher extends CryptoMain {
 

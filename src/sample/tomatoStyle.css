@@ -3,13 +3,13 @@
 }
 .button {
     -fx-background-color: tomato;
-    -fx-background-radius: 9px;
+    -fx-background-radius: 0px;
     -fx-font-family: Segoe UI;
 }
 
 .button:hover {
     -fx-background-color: white;
-    -fx-background-radius: 9px;
+    -fx-background-radius: 0px;
     -fx-font-family: Segoe UI;
 }
 
@@ -19,19 +19,19 @@
 
 .toggle-button{
     -fx-background-color: tomato;
-    -fx-background-radius: 9px;
+    -fx-background-radius: 0px;
     -fx-font-family: Segoe UI;
 }
 
 .toggle-button:hover{
     -fx-background-color: white;
-    -fx-background-radius: 9px;
+    -fx-background-radius: 0px;
     -fx-font-family: Segoe UI;
 }
 
 .toggle-button:selected{
     -fx-background-color: white;
-    -fx-background-radius: 9px;
+    -fx-background-radius: 0px;
     -fx-font-family: Segoe UI;
 }
 
@@ -58,9 +58,9 @@
 
     -fx-background-insets: 0;
     -fx-background-color: transparent, white, transparent, white;
-    -fx-background-radius: 5, 5, 5, 5;
+    -fx-background-radius: 0;
     -fx-border-color: tomato;
-    -fx-border-radius: 5, 5, 5, 5;
+    -fx-border-radius: 0;
 
     -fx-focus-color: -fx-control-inner-background;
     -fx-faint-focus-color: -fx-control-inner-background;
@@ -73,9 +73,9 @@
 
     -fx-background-insets: 0;
     -fx-background-color: transparent, white, transparent, white;
-    -fx-background-radius: 5, 5, 5, 5;
+    -fx-background-radius: 0;
     -fx-border-color: tomato;
-    -fx-border-radius: 5, 5, 5, 5;
+    -fx-border-radius: 0;
 
     -fx-focus-color: -fx-control-inner-background;
     -fx-faint-focus-color: -fx-control-inner-background;
@@ -88,9 +88,9 @@
 
     -fx-background-insets: 0;
     -fx-background-color: transparent, tomato, transparent, tomato;
-    -fx-background-radius: 9;
+    -fx-background-radius: 0;
     -fx-border-color: tomato;
-    -fx-border-radius: 9;
+    -fx-border-radius: 0;
 
     -fx-focus-color: -fx-control-inner-background;
     -fx-faint-focus-color: -fx-control-inner-background;

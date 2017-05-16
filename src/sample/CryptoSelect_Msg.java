@@ -3,10 +3,20 @@ package sample;
 import static sample.Controller.cm;
 
 /**
- * Created by Deltamike76 on 5/16/2017.
+ * This class creates the new instance (child) of crypto main, and
+ * handles the process in dealing with Messages.
+ * @author Daniel Malan <13danielmalan@gmail.com></>
  */
+
 public class CryptoSelect_Msg {
 
+    /**
+     * Calls the constructor of the the receptive cipher class.
+     * @param type Algorithm type (Uses enumeration).
+     * @param Message User message entered into the text box.
+     * @param key User crypto key.
+     * @param encrypt Boolean instructing the cipher should encrypt or decrypt.
+     */
     CryptoSelect_Msg(encryptionType type, String Message, String key, boolean encrypt)
     {
         cm = null;

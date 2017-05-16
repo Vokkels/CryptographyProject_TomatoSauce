@@ -4,7 +4,15 @@ import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
 /**
- * Created by Deltamike76 on 5/16/2017.
+ * This class handles all the multithreading related responsibilities
+ * of the progress bar and the threaded ciphers
+ *
+ * @author Daniel Malan <13danielmalan@gmail.com></>
+ */
+
+/**
+ * Creates a new Service that handles
+ * the multithreaded progress bar.
  */
 public class CipherMultithreading {
     final static Service thread = new Service<Integer>() {
@@ -25,6 +33,9 @@ public class CipherMultithreading {
         }
     };
 
+    /**
+     * Class for handling the cipher threads.
+     */
     public static class threadedAlgo implements Runnable {
 
         private encryptionType type;
@@ -34,6 +45,13 @@ public class CipherMultithreading {
         private boolean encrypt;
         private boolean isFile;
 
+        /**
+         * Creates a new thread for a cipher with data from a file.
+         * @param _type Algorithm type (Uses enumeration).
+         * @param _fileName Directory of the file.
+         * @param _key User crypto key.
+         * @param encrypt Boolean stating that the cipher should encrypt or decrypt.
+         */
         public void threadedAlgo_File(encryptionType _type, String _fileName, String _key, boolean encrypt) {
             this.type = _type;
             this.fileName = _fileName;
@@ -42,6 +60,13 @@ public class CipherMultithreading {
             isFile = true;
         }
 
+        /**
+         * Creates a new thread for a cipher with data from the message box.
+         * @param _type Algorithm type (Uses enumeration).
+         * @param _message User message entered into the text box.
+         * @param _key  User crypto key.
+         * @param encrypt Boolean instructing the cipher should encrypt or decrypt.
+         */
         public void threadedAlgo_MSG(encryptionType _type, String _message, String _key, boolean encrypt) {
             this.type = _type;
             this.fileName = _message;
@@ -50,6 +75,9 @@ public class CipherMultithreading {
             isFile = false;
         }
 
+        /**
+         * Called when the new thread is started.
+         */
         @Override
         public void run() {
 

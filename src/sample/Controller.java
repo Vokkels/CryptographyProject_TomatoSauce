@@ -202,7 +202,7 @@ public class Controller {
         inputKey.setText(null);
         inputTxt.promptTextProperty().setValue("                      Type a message.");
         inputTxt.editableProperty().setValue(true);
-
+        inputTxt.setWrapText(true);
     }
 
     public void SelFILE(MouseEvent mouseEvent) {
@@ -210,7 +210,6 @@ public class Controller {
         inputTxt.promptTextProperty().setValue("                    Drag and Drop File.");
         inputTxt.editableProperty().setValue(false);
         inputTxt.textProperty().setValue("");
-
     }
 
     public void ErrorMessage(String whatMessage, String decrypt)

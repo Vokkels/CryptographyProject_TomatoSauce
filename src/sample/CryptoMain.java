@@ -159,8 +159,15 @@ class CryptoMain implements Serializable {
      * */
     public static String convertToHex(String text) {
 
-        byte[] bytes = text.getBytes();
-        return Hex.encodeHexString(bytes);
+        try {
+            byte[] bytes = text.getBytes("ASCII");
+            return Hex.encodeHexString(bytes);
+        }
+        catch (Exception x) {
+            System.out.println(x.getMessage());
+        }
+
+        return null;
     }
 
     /**
@@ -201,7 +208,7 @@ class CryptoMain implements Serializable {
     public String convertByteAToString(byte[] bytes)
     {
         try {
-            String decoded = new String(bytes, "ISO-8859-1");
+            String decoded = new String(bytes, "ASCII");
             return decoded;
         }catch (Exception x) {System.out.println(x.getMessage());}
         return null;

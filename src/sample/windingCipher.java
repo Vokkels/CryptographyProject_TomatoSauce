@@ -5,16 +5,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Deltamike276 on 4/29/2017.
+ * Main cipher class for Winding Cipher.
+ *
+ * Encrypts and Decrypts the data
+ * and contains all methods necessary for both.
+ * @author Daniel Malan <13danielmalan@gmail.com></>
  */
 public class windingCipher extends CryptoMain {
 
+    /**
+     * Default constructor for winding cipher
+     */
     windingCipher()
     {
         super();
         setEncryptionType(encryptionType.windingCipher);
     }
 
+    /**
+     * Overloaded constructor for winding cipher
+     * for dealing with Files.
+     * @param fileLocation Directory of the file.
+     * @param key User crypto key.
+     * @param encrypt Boolean stating that the cipher should encrypt or decrypt.
+     */
     windingCipher(String fileLocation, String key, boolean encrypt)
     {
         //Calls parent class
@@ -24,6 +38,12 @@ public class windingCipher extends CryptoMain {
         setFile(true);
     }
 
+    /**
+     * Overloaded constructor for winding cipher
+     * for dealing with Messages.
+     * @param message User message entered into the text box.
+     * @param key User crypto key.
+     */
     windingCipher(String message, String key)
     {
         //Calls parent class
@@ -32,6 +52,14 @@ public class windingCipher extends CryptoMain {
         setEncryptionType(encryptionType.windingCipher);
     }
 
+    /**
+     * Encryption - Winding Cipher
+     *
+     * Overrides the method of crypto main
+     * Takes the message or files and encrypts
+     * them. Output is saved in hexadecimal to
+     * the instance variable, (cipherText) of the super class.
+     */
     @Override
     public void encrypt()
     {
@@ -74,15 +102,17 @@ public class windingCipher extends CryptoMain {
         finalizeCipher();
 }
 
+    /**
+     * Decryption - Winding Cipher
+     *
+     * Overrides the method of crypto main
+     * Takes the message or files and decrypts
+     * them. Output is saved in hexadecimal to
+     * the instance variable, (cipherText) of the super class.
+     */
     @Override
     public void decrypt()
     {
-
-        /*
-        String st1 = "Hello Pola";
-        String st2 = convertToHex(st1);
-        String st3 = convertHexToPlain(st2);
-        */
 
         String cipherKeyTmp = convertToHex(getEncryptionKey());
         String[][] cipherKey = getCipherKey(cipherKeyTmp);
@@ -113,6 +143,16 @@ public class windingCipher extends CryptoMain {
         finalizeCipher();
     }
 
+    /**
+     * Refactor the data into data blocks.
+     *
+     * Takes the block size and then calls the
+     * super class and gets the cipher bits and converts
+     * it into blocks of 128x128 and the adds it into an array
+     * thus creating a three dimensional array.
+     * @param blockAmount takes the amount of blocks to create as parameter.
+     * @return Returns a multidimensional array of strings.
+     */
     private String[][][] getCipherBlocks(int blockAmount)
     {
          /*Create Cipher Blocks*/
@@ -135,6 +175,14 @@ public class windingCipher extends CryptoMain {
         return  cipherBlocks;
     }
 
+    /**
+     * Converts the key into a 128x128 data block
+     *
+     * The key will repeat if it's shorter than 16384,
+     * until the entire block is filled.
+     * @param cipherKeyTmp A String containing the user key.
+     * @return a multidimensional block of strings of 128x128.
+     */
     private String[][] getCipherKey(String cipherKeyTmp)
     {
         System.out.println("DEBUG: Building Key Block!");
@@ -151,6 +199,16 @@ public class windingCipher extends CryptoMain {
         return  cipherKey;
     }
 
+    /**
+     * XOR character for character values.
+     *
+     * Takes the plaintext third dimensional string array
+     * and XOR char for char returning the XORed blocks.
+     * @param plainText Third dimensional array of plaintext data blocks.
+     * @param key The user key in the form of a 128x128 data block.
+     * @param forward The direction in which the XOR process is moving.
+     * @return An XORed third dimensional array of string.
+     */
     private String[][][] XOR(String[][][] plainText, String[][] key, boolean forward) {
 
         System.out.println("DEBUG: Starting XOR!");
@@ -177,6 +235,15 @@ public class windingCipher extends CryptoMain {
         return cipherText;
     }
 
+    /**
+     * Expansion of XOR
+     *
+     * Get called by XOR method, takes
+     * two data blocks and XORs them.
+     * @param Block1 multidimensional string array block 1.
+     * @param Block2 multidimensional string array block 2.
+     * @return Multidimensional string array of result block after XOR.
+     */
     private String[][] XORBlock(String[][] Block1, String[][] Block2) {
         String[][] outBlock = new String[128][128];
         for (int i = 0; i < 128; i++) {
@@ -195,6 +262,14 @@ public class windingCipher extends CryptoMain {
         return outBlock;
     }
 
+    /**
+     * Rotates the data block by x amount of degrees.
+     *
+     *
+     * @param matrix
+     * @param degrees
+     * @return
+     */
     private String[][][] windMatrix(String[][][] matrix, int degrees)
     {
         List<String[][]> list = new ArrayList<String[][]>();
