@@ -5,7 +5,6 @@ import java.io.Serializable;
 import org.apache.commons.codec.binary.Hex;
 import java.io.*;
 import javax.xml.bind.DatatypeConverter;
-import static sample.Controller.cm;
 import static sample.Controller.progress;
 
 /**

@@ -45,12 +45,7 @@ public class Controller {
     private PasswordField inputKey;
 
     public Controller() {
-        /** Start the Progressbar Thread*/
         progress = 0;
-        //progressBar.progressProperty().setValue(0);
-        // progressBar.progressProperty().unbind();
-        // progressBar.progressProperty().bind(thread.progressProperty());
-        //thread.start();
     }
 
     public String getFileLocation() {
@@ -124,39 +119,30 @@ public class Controller {
 
         progress = 0;
 
-        //thread.cancel();
         try {
             if (!threadStarted) {
-                progressBar.progressProperty().bind(thread.progressProperty());
-                thread.start();
+                progressBar.progressProperty().bind(CipherMultithreading.thread.progressProperty());
+                CipherMultithreading.thread.start();
                 threadStarted = true;
             }
         } catch (Exception x) {
+            System.out.println(x.getMessage());
         }
 
-        threadedAlgo cipherThread = new threadedAlgo();
+        CipherMultithreading.threadedAlgo cipherThread = new CipherMultithreading.threadedAlgo();
         ExecutorService executor = Executors.newFixedThreadPool(30);
-
-        // thread.setExecutor(executor);
-
-        // thread.start();
 
         if (tglFile.isSelected()) {
             cipherThread.threadedAlgo_File(radioButtons(), getFileLocation(), getKey(), encrypt);
             executor.execute(cipherThread);
 
-            //new CryptoSelect_File(radioButtons(), getFileLocation(), getKey(), encrypt);
         } else if (tglType.isSelected()) {
-            System.out.println("MSG: " + CryptoMain.convertToHex(getMessageTyped()));
 
-            //cipherThread.threadedAlgo_MSG(radioButtons(), getMessageTyped(), getKey(), encrypt);
-            //executor.execute(cipherThread);
             new CryptoSelect_Msg(radioButtons(), getMessageTyped().trim(), getKey(), encrypt);
             setMessage(cm.getCipherText());
         } else System.out.println("No Input Type Selected!");
 
     }
-
 
     public void TypeMSG(MouseEvent mouseEvent) {
         inputTxt.promptTextProperty().setValue("                      Type a message.");
@@ -176,61 +162,5 @@ public class Controller {
             inputTxt.setAlignment(Pos.TOP_LEFT);
         else if (tglFile.isSelected())
             inputTxt.setAlignment(Pos.CENTER_LEFT);
-
-    }
-
-    final static Service thread = new Service<Integer>() {
-        @Override
-        public Task createTask() {
-            return new Task<Integer>() {
-                @Override
-                public Integer call() throws InterruptedException {
-                    int i = 0;
-
-                    while (i < 100) {
-                        i = Math.round((int) Controller.progress);
-                        updateProgress(i, 100);
-                    }
-                    return i;
-                }
-            };
-        }
-    };
-
-    public static class threadedAlgo implements Runnable {
-
-        private encryptionType type;
-        private String fileName;
-        private String message;
-        private String key;
-        private boolean encrypt;
-        private boolean isFile;
-
-        public void threadedAlgo_File(encryptionType _type, String _fileName, String _key, boolean encrypt)
-        {
-            this.type = _type;
-            this.fileName = _fileName;
-            this.key = _key;
-            this.encrypt = encrypt;
-            isFile = true;
-        }
-
-        public void threadedAlgo_MSG(encryptionType _type, String _message, String _key, boolean encrypt)
-        {
-            this.type = _type;
-            this.fileName = _message;
-            this.key = _key;
-            this.encrypt = encrypt;
-            isFile = false;
-        }
-
-        @Override
-        public void run() {
-
-            if(isFile)
-                new CryptoSelect_File(type, fileName, key, encrypt);
-            else
-                new CryptoSelect_Msg(type, message, key, encrypt);
-        }
     }
 }
