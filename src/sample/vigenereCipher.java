@@ -34,9 +34,8 @@ public class vigenereCipher extends CryptoMain
     @Override
     public void encrypt()
     {
-
         char[] keyChars = getEncryptionKey().toCharArray();
-        byte[] bytes = hexStringToByteArray(getCipherText());
+        byte[] bytes = convertHexStringToByteArray(getCipherText());
         byte[] temp = bytes;
         for (int i = 0; i < temp.length; i++) {
             int keyNR = keyChars[i % keyChars.length] - 32;
@@ -57,7 +56,7 @@ public class vigenereCipher extends CryptoMain
     public void decrypt()
     {
         char[] keyChars = getEncryptionKey().toCharArray();
-        byte[] bytes = hexStringToByteArray(getCipherText());
+        byte[] bytes = convertHexStringToByteArray(getCipherText());
         byte[] temp = bytes;
         for (int i = 0; i < temp.length; i++) {
             int keyNR = keyChars[i % keyChars.length] - 32;

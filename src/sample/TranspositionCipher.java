@@ -10,7 +10,7 @@ public class TranspositionCipher extends CryptoMain
     TranspositionCipher()
     {
         super();
-        setEncryptionType(encryptionType.vernamCipher);
+        setEncryptionType(encryptionType.transpositionCipher);
     }
 
     TranspositionCipher(String fileLocation, String key, boolean encrypt)
@@ -18,7 +18,7 @@ public class TranspositionCipher extends CryptoMain
         //Calls parent class
         super(fileLocation,key, encrypt);
         //Sets encryption type
-        setEncryptionType(encryptionType.vigenereCipher);
+        setEncryptionType(encryptionType.transpositionCipher);
         setFile(true);
     }
 
@@ -27,20 +27,32 @@ public class TranspositionCipher extends CryptoMain
         //Calls parent class
         super(message, key);
         setFile(false);
-        setEncryptionType(encryptionType.vernamCipher);
+        setEncryptionType(encryptionType.transpositionCipher);
+        System.out.println("MSG " + convertToHex(message));
+        System.out.println("Input " + getCipherText());
     }
 
     @Override
     public void encrypt()
     {
+
+           /* String st1 = "My naam is Daniel";
+            String st2 = convertToHex(st1);
+            String st3 = convertHexToPlain(st2);
+
+            System.out.println("1 " + st1);
+            System.out.println("2 " + st2);
+            System.out.println("3 " + st3);
+            */
+
         System.out.println("DEBUG: Starting Transposition Cipher encryption!");
         String cipherKey =  getEncryptionKey();
-        String data = getCipherText();
+        String data = (getCipherText());
 
         int keyLength = cipherKey.length();
         int dataLength = data.length();
 
-        /*Establishes table size for perfect data fit*/
+        /**Establishes table size for perfect data fit*/
         int columns ;
         for(columns = keyLength; columns < data.length(); columns--)
             if(dataLength % columns == 0)
@@ -102,7 +114,7 @@ public class TranspositionCipher extends CryptoMain
         }
 
         System.out.println("Output Length: " + output.length());
-        System.out.println("Output: " + convertHexToPlain(output));
+        System.out.println("Output: " + output);
         setCipherText(output);
         finalizeCipher();
         System.out.println("DEBUG: Transposition Cipher encrypt Successfully!");
@@ -166,13 +178,13 @@ public class TranspositionCipher extends CryptoMain
             System.out.println("");
         }
 
-        for(int col = table.length - 1; col > 0; col--)
-            for (int row = table[0].length - 1; row > 0; row--)
+        for(int col = 0; col <  table.length; col++)
+            for (int row = 0; row < table[0].length; row++)
                 input += table[col][row];
 
+        System.out.println("Out: " + input);
         setCipherText(input);
         finalizeCipher();
-
         System.out.println("DEBUG: Transposition Cipher decrypt Successful!");
     }
 
