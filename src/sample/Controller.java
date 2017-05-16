@@ -53,7 +53,6 @@ public class Controller {
         //thread.start();
     }
 
-
     public String getFileLocation() {
         return location;
     }
@@ -65,22 +64,22 @@ public class Controller {
         runCipher(false);
     }
 
-    public CryptoMain.encryptionType radioButtons() {
+    public encryptionType radioButtons() {
         if (transposition.isSelected()) {
             useNormalASCII = true;
-            return CryptoMain.encryptionType.transpositionCipher;
+            return encryptionType.transpositionCipher;
         }
         if (vigenere.isSelected()) {
             useNormalASCII = false;
-            return CryptoMain.encryptionType.vigenereCipher;
+            return encryptionType.vigenereCipher;
         }
         if (vernam.isSelected()) {
             useNormalASCII = false;
-            return CryptoMain.encryptionType.vernamCipher;
+            return encryptionType.vernamCipher;
         }
         if (winding.isSelected()) {
             useNormalASCII = false;
-            return CryptoMain.encryptionType.windingCipher;
+            return encryptionType.windingCipher;
         }
         return null;
     }
@@ -134,7 +133,6 @@ public class Controller {
             }
         } catch (Exception x) {
         }
-
 
         threadedAlgo cipherThread = new threadedAlgo();
         ExecutorService executor = Executors.newFixedThreadPool(30);
@@ -201,14 +199,14 @@ public class Controller {
 
     public static class threadedAlgo implements Runnable {
 
-        private CryptoMain.encryptionType type;
+        private encryptionType type;
         private String fileName;
         private String message;
         private String key;
         private boolean encrypt;
         private boolean isFile;
 
-        public void threadedAlgo_File(CryptoMain.encryptionType _type, String _fileName, String _key, boolean encrypt)
+        public void threadedAlgo_File(encryptionType _type, String _fileName, String _key, boolean encrypt)
         {
             this.type = _type;
             this.fileName = _fileName;
@@ -217,7 +215,7 @@ public class Controller {
             isFile = true;
         }
 
-        public void threadedAlgo_MSG(CryptoMain.encryptionType _type, String _message, String _key, boolean encrypt)
+        public void threadedAlgo_MSG(encryptionType _type, String _message, String _key, boolean encrypt)
         {
             this.type = _type;
             this.fileName = _message;
