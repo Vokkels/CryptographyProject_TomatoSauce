@@ -37,7 +37,7 @@ public class Controller {
     @FXML
     private ToggleButton tglFile;
     @FXML
-    private TextField inputTxt;
+    private TextArea inputTxt;
     @FXML
     private RadioButton transposition;
     @FXML
@@ -202,7 +202,7 @@ public class Controller {
         inputKey.setText(null);
         inputTxt.promptTextProperty().setValue("                      Type a message.");
         inputTxt.editableProperty().setValue(true);
-        inputTxt.setAlignment(Pos.CENTER_LEFT);
+
     }
 
     public void SelFILE(MouseEvent mouseEvent) {
@@ -210,14 +210,7 @@ public class Controller {
         inputTxt.promptTextProperty().setValue("                    Drag and Drop File.");
         inputTxt.editableProperty().setValue(false);
         inputTxt.textProperty().setValue("");
-        inputTxt.setAlignment(Pos.CENTER_LEFT);
-    }
 
-    public void TypeFunct(MouseEvent mouseEvent) {
-        if (tglType.isSelected())
-            inputTxt.setAlignment(Pos.TOP_LEFT);
-        else if (tglFile.isSelected())
-            inputTxt.setAlignment(Pos.CENTER_LEFT);
     }
 
     public void ErrorMessage(String whatMessage, String decrypt)

@@ -1,0 +1,99 @@
+.root{
+
+}
+.button {
+    -fx-background-color: tomato;
+    -fx-background-radius: 9px;
+    -fx-font-family: Segoe UI;
+}
+
+.button:hover {
+    -fx-background-color: white;
+    -fx-background-radius: 9px;
+    -fx-font-family: Segoe UI;
+}
+
+.anchorpane {
+    -fx-background-color: #253441;
+}
+
+.toggle-button{
+    -fx-background-color: tomato;
+    -fx-background-radius: 9px;
+    -fx-font-family: Segoe UI;
+}
+
+.toggle-button:hover{
+    -fx-background-color: white;
+    -fx-background-radius: 9px;
+    -fx-font-family: Segoe UI;
+}
+
+.toggle-button:selected{
+    -fx-background-color: white;
+    -fx-background-radius: 9px;
+    -fx-font-family: Segoe UI;
+}
+
+.radio-button{
+    -fx-font-family: Segoe UI;
+    -fx-text-fill: tomato;
+    -fx-focus-color: transparent;
+    -fx-focus-traversable: false;
+}
+
+.radio-button .dot {
+    -fx-mark-highlight-color: tomato ;
+    -fx-mark-color: tomato ;
+    -fx-focus-traversable: false;
+}
+
+.label{
+    -fx-font-family: Segoe UI;
+    -fx-text-fill: tomato;
+}
+
+.text-area{
+    fx-highlight-fill: tomato;
+
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, white, transparent, white;
+    -fx-background-radius: 5, 5, 5, 5;
+    -fx-border-color: tomato;
+    -fx-border-radius: 5, 5, 5, 5;
+
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
+    -fx-text-box-border: -fx-control-inner-background;
+    -fx-border-width: 1;
+}
+
+.password-field{
+    fx-highlight-fill: tomato;
+
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, white, transparent, white;
+    -fx-background-radius: 5, 5, 5, 5;
+    -fx-border-color: tomato;
+    -fx-border-radius: 5, 5, 5, 5;
+
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
+    -fx-text-box-border: -fx-control-inner-background;
+    -fx-border-width: 1;
+}
+
+.progress-bar > .bar{
+    -fx-highlight-fill: tomato;
+
+    -fx-background-insets: 0;
+    -fx-background-color: transparent, tomato, transparent, tomato;
+    -fx-background-radius: 9;
+    -fx-border-color: tomato;
+    -fx-border-radius: 9;
+
+    -fx-focus-color: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-control-inner-background;
+    -fx-text-box-border: -fx-control-inner-background;
+    -fx-border-width: 1;
+}
