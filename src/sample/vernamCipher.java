@@ -1,5 +1,8 @@
 package sample;
 ///////////////////////////////////////////////////////////////////
+
+import javafx.concurrent.Service;
+
 /**
  * Created by Deltamike276 on 4/29/2017.
  */
@@ -31,14 +34,20 @@ public class vernamCipher extends CryptoMain {
     @Override
     public void encrypt()
     {
+        Controller.progress = 50;
         //Converts the text key to binary
         String cipherKey =  convertToHex(getEncryptionKey());
         //Create empty output String
         String plainText = getCipherText();
         String out = "";
-
+        Controller.progress = 70;
         System.out.println("DEBUG: Starting Vernam Cipher!");
+
+        int incrementingVal = Math.round(plainText.length());
+
         for(int i = 0,j = 0; i < plainText.length(); i++,j++) {
+
+            Controller.progress = Math.round((i*100)/incrementingVal);
 
             /*XOR key with code*/
             long val1 = Character.digit(plainText.charAt(i),16);
@@ -51,6 +60,7 @@ public class vernamCipher extends CryptoMain {
                 j = 0;
         }
 
+        Controller.progress = 80;
         setCipherText(out);
         System.out.println("DEBUG: Starting Vernam Cipher Finished Successfully!");
         finalizeCipher();
@@ -83,5 +93,6 @@ public class vernamCipher extends CryptoMain {
         System.out.println("DEBUG: Starting Vernam Cipher Finished Successfully!");
         System.out.println("Decrypt: " + out);
         finalizeCipher();
+        Controller.progress = 100;
     }
 }

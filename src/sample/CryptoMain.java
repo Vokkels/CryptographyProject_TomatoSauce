@@ -15,6 +15,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static sample.Controller.cm;
+import static sample.Controller.progress;
 
 class CryptoMain implements Serializable {
 
@@ -61,6 +62,7 @@ class CryptoMain implements Serializable {
 
         setEncryptionKey(_key);
         String tmpMsg = convertToHex(_message);
+        System.out.println("MSG: " + tmpMsg);
         setCipherText(tmpMsg);
         setWasEncrypted(false);
     }
@@ -234,8 +236,12 @@ class CryptoMain implements Serializable {
         else
         {
             /*Message Encryption Method*/
+            System.out.println("DEBUG: FINALIZED: " + getCipherText());
             setCipherText(convertHexToPlain(getCipherText()));
         }
+
+        /** Update Progress Bar*/
+        progress = 0;
     }
 
     public void encrypt()
@@ -356,8 +362,6 @@ class CryptoSelect_Msg
                 break;
 
         }
-
-        cm.setWasEncrypted(false);
 
         if(encrypt)
             cm.encrypt();

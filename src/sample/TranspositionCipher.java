@@ -33,17 +33,17 @@ public class TranspositionCipher extends CryptoMain
     }
 
     @Override
-    public void encrypt() throws UnknownFormatConversionException
+    public void encrypt()
     {
-/*
-            String st1 = "My naam is Daniel";
+
+           /* String st1 = "My naam is Daniel";
             String st2 = convertToHex(st1);
             String st3 = convertHexToPlain(st2);
 
             System.out.println("1 " + st1);
             System.out.println("2 " + st2);
             System.out.println("3 " + st3);
-*/
+            */
 
         System.out.println("DEBUG: Starting Transposition Cipher encryption!");
         String cipherKey =  getEncryptionKey();
@@ -52,7 +52,7 @@ public class TranspositionCipher extends CryptoMain
         int keyLength = cipherKey.length();
         int dataLength = data.length();
 
-        /*Establishes table size for perfect data fit*/
+        /**Establishes table size for perfect data fit*/
         int columns ;
         for(columns = keyLength; columns < data.length(); columns--)
             if(dataLength % columns == 0)
@@ -125,7 +125,7 @@ public class TranspositionCipher extends CryptoMain
         System.out.println("DEBUG: Starting Transposition Cipher decryption!");
 
         String cipherKey =  getEncryptionKey();
-        String data = (getCipherText());
+        String data = getCipherText();
 
         int keyLength = cipherKey.length();
         int dataLength = data.length();
@@ -183,7 +183,7 @@ public class TranspositionCipher extends CryptoMain
                 input += table[col][row];
 
         System.out.println("Out: " + input);
-        setCipherText((input));
+        setCipherText(input);
         finalizeCipher();
         System.out.println("DEBUG: Transposition Cipher decrypt Successful!");
     }
