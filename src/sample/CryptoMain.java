@@ -51,9 +51,10 @@ class CryptoMain implements Serializable {
         setWasEncrypted(_encrypt);
         setCipherText(null);
         setCipherBits(null);
-
+        Controller.progress = 10;
         /*Opens the File*/
         OpenFile();
+        Controller.progress = 20;
     }
 
     /**
@@ -276,7 +277,7 @@ class CryptoMain implements Serializable {
         }
 
         /** Update Progress Bar*/
-        progress = 0;
+        Controller.progress = 0;
     }
 
     /**

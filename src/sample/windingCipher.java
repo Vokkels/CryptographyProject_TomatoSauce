@@ -1,6 +1,7 @@
 package sample;
 
 import java.lang.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,11 +69,28 @@ public class windingCipher extends CryptoMain {
         String[][] cipherKey = getCipherKey(cipherKeyTmp);
         double tmp  = Math.round((getCipherText().length()/(128*128))+0.5);
         int blockAmount =  (int) tmp;
-        String cipherBlocks[][][] = getCipherBlocks(blockAmount);
-        cipherBlocks = XOR(cipherBlocks, cipherKey,true);
+
+        System.out.println("Contains: " + blockAmount + " blocks");
+
+        //Adjust Key
+        int windLength = getEncryptionKey().length();
+        if(windLength >= blockAmount)
+            windLength = blockAmount - 1;
+
+        Controller.progress = 30;
+        String cipherBlocks[][][] = getCipherBlocks(blockAmount,getCipherText());
+
+        String[][][] windedMatrix = new String[blockAmount][128][128];
+
+        System.arraycopy(windMatrix(cipherBlocks, 3), 0,windedMatrix,0,blockAmount);
+        Controller.progress = 35;
+        cipherBlocks = XOR(windedMatrix, cipherKey,true);
+        Controller.progress = 40;
         String output = "";
 
+        Controller.progress = 70;
         for(int count = 0; count < blockAmount; count++) {
+            System.out.println("BlockFirst: " + cipherBlocks[count][0][0]);
             for(int i = 0; i < 128; i++) {
                 for(int j = 0; j < 128; j++)
                 {
@@ -83,6 +101,7 @@ public class windingCipher extends CryptoMain {
                 }
             }
         }
+        Controller.progress = 80;
 
         /*
         for(int count = 0; count < blockAmount; count++) {
@@ -98,7 +117,7 @@ public class windingCipher extends CryptoMain {
         }*/
 
         setCipherText(output);
-        System.out.println(output);
+        //System.out.println(output);
         finalizeCipher();
 }
 
@@ -119,26 +138,50 @@ public class windingCipher extends CryptoMain {
         double tmp  = Math.round((getCipherText().length()/(128*128))+0.5);
         int blockAmount =  (int) tmp;
 
+        System.out.println("Contains: " + blockAmount + " blocks");
+
+        //Adjust Key
+        int windLength = getEncryptionKey().length();
+        if(windLength >= blockAmount)
+            windLength = blockAmount - 1;
+
+        Controller.progress = 30;
         String output = "";
-        String cipherBlocks[][][] = getCipherBlocks(blockAmount);
+        String cipherBlocks[][][] = new String[blockAmount][128][128];
+        String[][][] windedMatrix = getCipherBlocks(blockAmount, getCipherText());
 
-        //cipherBlocks = windMatrix(cipherBlocks,-getEncryptionKey().length());
 
-        cipherBlocks = XOR(cipherBlocks, cipherKey, false);
+        System.arraycopy(windMatrix(windedMatrix,-4),0,cipherBlocks,0,blockAmount);
+
+        //String reverse = new StringBuffer(getCipherText()).reverse().toString();
+
+        System.arraycopy(XOR(cipherBlocks, cipherKey, false),0,windedMatrix,0,blockAmount);
+
+       // System.arraycopy(getCipherBlocks(blockAmount, getCipherText()),0,cipherBlocks,0,blockAmount);
+
+        Controller.progress = 35;
+
+        // = windMatrix(cipherBlocks,-4);
+
+        Controller.progress = 70;
+
+        //String[][][] tmp =cipherBlocks
+
         for(int count = 0; count < blockAmount; count++) {
+            System.out.println("BlockFirst: " + windedMatrix[count][0][0]);
             for(int i = 0; i < 128; i++) {
                 for(int j = 0; j < 128; j++)
                 {
-                    if(cipherBlocks[count][i][j] != null)
-                        output += cipherBlocks[count][i][j];
+                    if(windedMatrix[count][i][j] != null)
+                        output += windedMatrix[count][i][j];
                     else
                         break;
                 }
             }
         }
-
-        System.out.println(output);
-        System.out.println(convertHexToPlain(output));
+        Controller.progress = 80;
+        //System.out.println(output);
+        //System.out.println(convertHexToPlain(output));
         setCipherText(output);
         finalizeCipher();
     }
@@ -153,7 +196,7 @@ public class windingCipher extends CryptoMain {
      * @param blockAmount takes the amount of blocks to create as parameter.
      * @return Returns a multidimensional array of strings.
      */
-    private String[][][] getCipherBlocks(int blockAmount)
+    private String[][][] getCipherBlocks(int blockAmount, String data)
     {
          /*Create Cipher Blocks*/
         String[][][] cipherBlocks =  new String[blockAmount][128][128];
@@ -165,7 +208,7 @@ public class windingCipher extends CryptoMain {
                 for (int j = 0; j < 128; j++, hexCounter++) {
 
                     if(hexCounter < getCipherText().length())
-                        cipherBlocks[blockCount][i][j] = getCipherText().substring(hexCounter, hexCounter + 1);
+                        cipherBlocks[blockCount][i][j] = data.substring(hexCounter, hexCounter + 1);
                     else
                         break;
                 }
@@ -265,22 +308,20 @@ public class windingCipher extends CryptoMain {
     /**
      * Rotates the data block by x amount of degrees.
      *
-     *
-     * @param matrix
-     * @param degrees
-     * @return
+     *Takes the three dimensional data block and rotates the data
+     * then returns the result as a three dimensional array of strings.
+     * @param matrix Third dimensional data block.
+     * @param degrees The amount of rotations to be done on data blocks.
+     * @return Result of rotated data blocks.
      */
     private String[][][] windMatrix(String[][][] matrix, int degrees)
     {
         List<String[][]> list = new ArrayList<String[][]>();
-        for(int i = 0; i < matrix.length; i++)
+        int i = 0;
+        for(i = 0; i < matrix.length; i++)
             list.add(matrix[i]);
 
-        java.util.Collections.rotate(list, degrees);
-
-        for(int i = 0; i < matrix.length; i++)
-            matrix[i] = list.get(i);
-
+        java.util.Collections.rotate(list.subList(0,i), degrees);
         return matrix;
     }
 }
