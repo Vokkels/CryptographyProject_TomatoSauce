@@ -30,6 +30,16 @@ public class vernamCipher extends CryptoMain {
         setEncryptionType(encryptionType.vernamCipher);
     }
 
+
+    /**
+     * Encryption - Vernam Cipher
+     *
+     * Overrides the method of crypto main
+     * Takes the message or files and decrypts
+     * them. Output is saved in hexadecimal to
+     * the instance variable, (cipherText) of the super class.
+     */
+
     @Override
     public void encrypt()
     {
@@ -65,6 +75,14 @@ public class vernamCipher extends CryptoMain {
         finalizeCipher();
     }
 
+    /**
+     * Decryption - Vernam Cipher
+     *
+     * Overrides the method of crypto main
+     * Takes the message or files and decrypts
+     * them. Output is saved in hexadecimal to
+     * the instance variable, (cipherText) of the super class.
+     */
     @Override
     public void decrypt()
     {

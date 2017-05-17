@@ -31,6 +31,14 @@ public class vigenereCipher extends CryptoMain
 
     public char temp;
 
+    /**
+     * Encryption - Vigenere Cipher
+     *
+     * Overrides the method of crypto main
+     * Takes the message or files and encrypts
+     * them. Output is saved in hexadecimal to
+     * the instance variable, (cipherText) of the super class.
+     */
     @Override
     public void encrypt()
     {
@@ -52,6 +60,14 @@ public class vigenereCipher extends CryptoMain
         finalizeCipher();
     }
 
+    /**
+     * Decryption - Winding Cipher
+     *
+     * Overrides the method of crypto main
+     * Takes the message or files and decrypts
+     * them. Output is saved in hexadecimal to
+     * the instance variable, (cipherText) of the super class.
+     */
     @Override
     public void decrypt()
     {
