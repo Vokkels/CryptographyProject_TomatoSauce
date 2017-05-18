@@ -33,11 +33,13 @@ public class CryptoSelect_Msg {
                 break;
 
             case vernamCipher:
+                Message = CryptoMain.convertByteAToString(CryptoMain.convertHexStringToByteArray(CryptoMain.convertToHex(Message)));
                 System.out.println("DEBUG: vernamCipher Selected");
                 cm = new vernamCipher(Message, key);
                 break;
 
             case windingCipher:
+                Message = CryptoMain.convertByteAToString(CryptoMain.convertHexStringToByteArray(CryptoMain.convertToHex(Message)));
                 System.out.println("DEBUG: windingCipher Selected");
                 cm = new windingCipher(Message, key);
                 break;

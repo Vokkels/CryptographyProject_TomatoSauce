@@ -3,7 +3,8 @@ package sample;
 import javafx.concurrent.Service;
 
 /**
- * @author Schalk Pretoruis
+ * Main class for communication  between the interface and activities
+ * @author Schalk Pretorius </pretorius.scw@gmail.com>
  */
 public class vernamCipher extends CryptoMain {
 

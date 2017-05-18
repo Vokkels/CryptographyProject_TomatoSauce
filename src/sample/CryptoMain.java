@@ -176,7 +176,7 @@ class CryptoMain implements Serializable {
      *  @param bytes bytes to convert.
      *  @return returns a string of hexadecimal values.
      */
-    public String bytesToHexString(byte[] bytes)
+    public static String bytesToHexString(byte[] bytes)
     {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes)
@@ -190,7 +190,7 @@ class CryptoMain implements Serializable {
      * @param s String of hexadecimal data to convert.
      * @return byte array of the converted data.
      * */
-    public byte[] convertHexStringToByteArray(String s) {
+    public static byte[] convertHexStringToByteArray(String s) {
         int len = s.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
@@ -206,7 +206,7 @@ class CryptoMain implements Serializable {
      * @param bytes bytes to convert.
      * @return string of string of bytes.
      */
-    public String convertByteAToString(byte[] bytes)
+    public static String convertByteAToString(byte[] bytes)
     {
         try {
             String decoded = new String(bytes, "ASCII");
@@ -220,7 +220,7 @@ class CryptoMain implements Serializable {
      * @param input String of byte data.
      * @return byteArray of converted string.
      */
-    public byte[] convertStringToByteA(String input)
+    public static byte[] convertStringToByteA(String input)
     {
         try{
             byte[] encoded = input.getBytes("ASCII");

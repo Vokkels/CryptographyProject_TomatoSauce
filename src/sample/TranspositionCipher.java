@@ -69,10 +69,14 @@ public class TranspositionCipher extends CryptoMain {
         String cipherKey = tabular(getEncryptionKey());
         String data = (getCipherText());
 
+        Controller.progress = 30;
+
         //---Extreme Case---
         //Data length smaller than key
         if (data.length() < cipherKey.length())
             cipherKey = cipherKey.substring(0, data.length());
+
+        Controller.progress = 40;
 
         System.out.println("DEBUG: KEY:" + cipherKey.toString());
 
@@ -80,11 +84,15 @@ public class TranspositionCipher extends CryptoMain {
         int keyLength = cipherKey.length();
         int dataLength = data.length();
 
+        Controller.progress = 50;
+
         //Establishes table size for perfect data fit
         int columns;
         for (columns = keyLength; columns < data.length(); columns--)
             if (dataLength % columns == 0)
                 break;
+
+        Controller.progress = 60;
 
         int[] keyValue;
         //---Extreme Case---
@@ -97,10 +105,8 @@ public class TranspositionCipher extends CryptoMain {
 
         int rows = Math.abs(Math.round((dataLength / columns) + 0.5f)) - 1;
 
+        Controller.progress = 70;
         String[][] table = new String[rows][columns];
-
-        System.out.println("DEBUG: r: " + rows);
-        System.out.println("DEBUG: c: " + columns);
 
         /*Reads data into the table*/
         for (int col = 0, cnt = 0; col < table.length; col++)
@@ -111,6 +117,8 @@ public class TranspositionCipher extends CryptoMain {
                 else
                     table[col][row] = getRandomVal();
             }
+
+        Controller.progress = 80;
 
         //only used for debug
         //Prints key values//
@@ -127,6 +135,9 @@ public class TranspositionCipher extends CryptoMain {
             }
             System.out.println("");
         }
+
+
+        Controller.progress = 90;
 
         String output = "";
 
@@ -162,22 +173,29 @@ public class TranspositionCipher extends CryptoMain {
         String cipherKey = tabular(getEncryptionKey());
         String data = (getCipherText());
 
+
+        Controller.progress = 30;
+
         //---Extreme Case---
         //Data length smaller than key
         if (data.length() < cipherKey.length())
             cipherKey = cipherKey.substring(0, data.length());
 
-        System.out.println("DEBUG: KEY:" + cipherKey.toString());
+        Controller.progress = 40;
 
         //Gets the length of variables
         int keyLength = cipherKey.length();
         int dataLength = data.length();
+
+        Controller.progress = 50;
 
         //Establishes table size for perfect data fit
         int columns;
         for (columns = keyLength; columns < data.length(); columns--)
             if (dataLength % columns == 0)
                 break;
+
+        Controller.progress = 60;
 
         int[] keyValue;
         //---Extreme Case---
@@ -190,11 +208,8 @@ public class TranspositionCipher extends CryptoMain {
 
         int rows = Math.abs(Math.round((dataLength / columns) + 0.5f)) - 1;
 
+        Controller.progress = 60;
         String[][] table = new String[rows][columns];
-
-        System.out.println("DEBUG: r: " + rows);
-        System.out.println("DEBUG: c: " + columns);
-
 
         int[] tmpKeyValue = new int[keyLength];
         for (int i = 0; i < keyValue.length; i++)
@@ -212,6 +227,7 @@ public class TranspositionCipher extends CryptoMain {
                 table[j][val] = data.substring(cnt, cnt + 1);
         }
 
+        Controller.progress = 80;
 
         //only used for debug
         //Prints key values//
@@ -231,6 +247,7 @@ public class TranspositionCipher extends CryptoMain {
             System.out.println("");
         }
 
+        Controller.progress = 90;
 
         for (int col = 0; col < table.length; col++)
             for (int row = 0; row < table[0].length; row++)

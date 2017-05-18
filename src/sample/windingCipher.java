@@ -1,7 +1,6 @@
 package sample;
 
 import java.lang.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,57 +66,43 @@ public class windingCipher extends CryptoMain {
         /*Create key block*/
         String cipherKeyTmp = convertToHex(getEncryptionKey());
         String[][] cipherKey = getCipherKey(cipherKeyTmp);
+        //calculate the total amount of blocks required
         double tmp  = Math.round((getCipherText().length()/(128*128))+0.5);
         int blockAmount =  (int) tmp;
 
         System.out.println("Contains: " + blockAmount + " blocks");
 
-        //Adjust Key
+        //Calculate the degrees to wind
         int windLength = getEncryptionKey().length();
         if(windLength >= blockAmount)
             windLength = blockAmount - 1;
 
         Controller.progress = 30;
+        //Converts a single string to a data blocks
         String cipherBlocks[][][] = getCipherBlocks(blockAmount,getCipherText());
-
-        String[][][] windedMatrix = new String[blockAmount][128][128];
-
-        System.arraycopy(windMatrix(cipherBlocks, 3), 0,windedMatrix,0,blockAmount);
-        Controller.progress = 35;
-        cipherBlocks = XOR(windedMatrix, cipherKey,true);
         Controller.progress = 40;
+        //XOR  cipher blocks
+        String[][][] XORarray = XOR(cipherBlocks, cipherKey, true);
+        Controller.progress = 50;
+        //wind matrix with windLength
+        String[][][] windedMatrix = windMatrix(XORarray, windLength);
         String output = "";
 
         Controller.progress = 70;
+        //Output data as single string
         for(int count = 0; count < blockAmount; count++) {
-            System.out.println("BlockFirst: " + cipherBlocks[count][0][0]);
             for(int i = 0; i < 128; i++) {
                 for(int j = 0; j < 128; j++)
                 {
-                    if(cipherBlocks[count][i][j] != null)
-                        output += cipherBlocks[count][i][j];
+                    if(windedMatrix[count][i][j] != null)
+                        output += windedMatrix[count][i][j];
                     else
                         break;
                 }
             }
         }
-        Controller.progress = 80;
-
-        /*
-        for(int count = 0; count < blockAmount; count++) {
-            String[][] windedMatrix = windMatrix(cipherBlocks[count], 30);
-            for(int i = 0; i < 128; i++) {
-                for (int j = 0; j < 128; j++) {
-                    if(windedMatrix[i][j] != null)
-                    output += windedMatrix[i][j];
-                    else
-                        break;
-                }
-            }
-        }*/
-
+        Controller.progress = 85;
         setCipherText(output);
-        //System.out.println(output);
         finalizeCipher();
 }
 
@@ -132,56 +117,45 @@ public class windingCipher extends CryptoMain {
     @Override
     public void decrypt()
     {
-
+        /*Create key block*/
         String cipherKeyTmp = convertToHex(getEncryptionKey());
         String[][] cipherKey = getCipherKey(cipherKeyTmp);
+        //calculate the total amount of blocks required
         double tmp  = Math.round((getCipherText().length()/(128*128))+0.5);
         int blockAmount =  (int) tmp;
 
         System.out.println("Contains: " + blockAmount + " blocks");
 
-        //Adjust Key
+        //Calculate the degrees to wind
         int windLength = getEncryptionKey().length();
         if(windLength >= blockAmount)
             windLength = blockAmount - 1;
 
-        Controller.progress = 30;
         String output = "";
-        String cipherBlocks[][][] = new String[blockAmount][128][128];
-        String[][][] windedMatrix = getCipherBlocks(blockAmount, getCipherText());
-
-
-        System.arraycopy(windMatrix(windedMatrix,-4),0,cipherBlocks,0,blockAmount);
-
-        //String reverse = new StringBuffer(getCipherText()).reverse().toString();
-
-        System.arraycopy(XOR(cipherBlocks, cipherKey, false),0,windedMatrix,0,blockAmount);
-
-       // System.arraycopy(getCipherBlocks(blockAmount, getCipherText()),0,cipherBlocks,0,blockAmount);
-
-        Controller.progress = 35;
-
-        // = windMatrix(cipherBlocks,-4);
-
+        Controller.progress = 30;
+        //Converts a single string to a data blocks
+        String cipherBlocks[][][] = getCipherBlocks(blockAmount, getCipherText());
+        Controller.progress = 40;
+        //XOR  cipher blocks
+        String[][][] windedMatrix = windMatrix(cipherBlocks, -windLength - 1);
+        Controller.progress = 60;
+        //wind matrix with windLength
+        String[][][] XORArray = XOR(windedMatrix, cipherKey, false);
         Controller.progress = 70;
 
-        //String[][][] tmp =cipherBlocks
-
+        //Output data as single string
         for(int count = 0; count < blockAmount; count++) {
-            System.out.println("BlockFirst: " + windedMatrix[count][0][0]);
             for(int i = 0; i < 128; i++) {
                 for(int j = 0; j < 128; j++)
                 {
-                    if(windedMatrix[count][i][j] != null)
-                        output += windedMatrix[count][i][j];
+                    if(XORArray[count][i][j] != null)
+                        output += XORArray[count][i][j].toLowerCase();
                     else
                         break;
                 }
             }
         }
-        Controller.progress = 80;
-        //System.out.println(output);
-        //System.out.println(convertHexToPlain(output));
+        Controller.progress = 85;
         setCipherText(output);
         finalizeCipher();
     }
@@ -238,7 +212,6 @@ public class windingCipher extends CryptoMain {
                     k = 0;
             }
         }
-
         return  cipherKey;
     }
 
@@ -267,7 +240,7 @@ public class windingCipher extends CryptoMain {
         }
         else
         {
-            for (int blockCounter = blockAmount - 1; blockCounter > 1; blockCounter--) {
+            for (int blockCounter = blockAmount - 1; blockCounter > 0; blockCounter--) {
                 cipherText[blockCounter] = XORBlock(plainText[blockCounter - 1], plainText[blockCounter]);
             }
 
