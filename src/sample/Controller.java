@@ -65,6 +65,7 @@ public class Controller {
      */
     public void encryptFile(ActionEvent actionEvent)
     {
+        progress = 0;
         if (tglType.isSelected() && inputTxt.getText() == null)
             ErrorMessage("TypeSomething", null);
         else if (tglFile.isSelected() && location == "")
@@ -84,14 +85,15 @@ public class Controller {
      */
     public void decryptFile(ActionEvent actionEvent)
     {
+        progress = 0;
         if (tglType.isSelected() && inputTxt.getText() == null)
-            ErrorMessage("TypeSomething", "decrpyt");
+            ErrorMessage("TypeSomething", "decrypt");
         else if (tglFile.isSelected() && location == "")
-            ErrorMessage("DropSomething", "decrpyt");
+            ErrorMessage("DropSomething", "decrypt");
         else if (!tglFile.isSelected() && !tglType.isSelected())
-            ErrorMessage("SelectSomething", "decrpyt");
+            ErrorMessage("SelectSomething", "decrypt");
         else if (inputKey.getText() == null || inputKey.getText().length() < 8)
-            ErrorMessage("TypePassKey", "decrpyt");
+            ErrorMessage("TypePassKey", "decrypt");
         else
             runCipher(false);
     }

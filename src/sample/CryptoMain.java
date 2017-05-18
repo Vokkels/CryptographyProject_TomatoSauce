@@ -223,7 +223,7 @@ class CryptoMain implements Serializable {
     public byte[] convertStringToByteA(String input)
     {
         try{
-            byte[] encoded = input.getBytes("ISO-8859-1");
+            byte[] encoded = input.getBytes("ASCII");
             return encoded;
         }
         catch (Exception x) {System.out.println(x.getMessage());}
@@ -242,7 +242,7 @@ class CryptoMain implements Serializable {
 
             char[] tmp = hexString.toCharArray();
             byte[] bytes = Hex.decodeHex(tmp);
-            return new String(bytes, "ISO-8859-1");
+            return new String(bytes, "ASCII");
 
         }
         catch (Exception x)
