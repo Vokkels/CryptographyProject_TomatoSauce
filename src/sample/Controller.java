@@ -135,6 +135,7 @@ public class Controller {
                 location = file.getAbsolutePath();
             }
         }
+        inputTxt.setText(location);
         event.setDropCompleted(success);
         event.consume();
         System.out.println(location);
