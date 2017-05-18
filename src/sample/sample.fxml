@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 
 <?import javafx.scene.control.TextField?>
-<GridPane alignment="center" hgap="10" prefHeight="367.0" prefWidth="419.0" stylesheets="@tomatoStyle.css" vgap="10" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<GridPane alignment="center" hgap="10" prefHeight="367.0" prefWidth="419.0" stylesheets="@../Resources/tomatoStyle.css" vgap="10" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <AnchorPane prefHeight="359.0" prefWidth="467.0" styleClass="anchorpane">
       <children>
           <Button layoutX="293.0" layoutY="241.0" onAction="#encryptFile" prefHeight="30.0" prefWidth="100.0" styleClass="button" text="Encrypt" />
