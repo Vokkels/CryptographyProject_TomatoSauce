@@ -173,7 +173,6 @@ public class TranspositionCipher extends CryptoMain {
         String cipherKey = tabular(getEncryptionKey());
         String data = (getCipherText());
 
-
         Controller.progress = 30;
 
         //---Extreme Case---

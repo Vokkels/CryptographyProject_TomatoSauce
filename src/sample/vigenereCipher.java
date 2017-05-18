@@ -59,10 +59,12 @@ public class vigenereCipher extends CryptoMain {
     @Override
     public void encrypt()
     {
+        Controller.progress = 40;
         // Set the encryption key and change it to a character array.
         char[] keyToChar = getEncryptionKey().toCharArray();
         // Set byte Array by converting the plaintext into bytes.
         byte[] bytes = convertHexStringToByteArray(getCipherText());
+        Controller.progress = 60;
         // Start encryption process
         for (int i = 0; i < bytes.length; i++) {
             // Expand the key.
@@ -82,6 +84,7 @@ public class vigenereCipher extends CryptoMain {
                 bytes[i] = (byte) (x + 32);
             }
         }
+        Controller.progress = 80;
         //Convert output back to HEX string.
         String out = bytesToHexString(bytes);
         //System.out.println(out);
@@ -102,10 +105,12 @@ public class vigenereCipher extends CryptoMain {
     @Override
     public void decrypt()
     {
+        Controller.progress = 40;
         // Set the decryption key and change it to a character array.
         char[] keyChars = getEncryptionKey().toCharArray();
         // Set byte Array by converting the plaintext into bytes.
         byte[] bytes = convertHexStringToByteArray(getCipherText());
+        Controller.progress = 60;
         // Start decryption process
         for (int i = 0; i < bytes.length; i++) {
             // Expand the key.
@@ -125,6 +130,7 @@ public class vigenereCipher extends CryptoMain {
                 bytes[i] = (byte) (x + 32);
             }
         }
+        Controller.progress = 80;
         //Convert output back to HEX string.
         String out = bytesToHexString(bytes);
         //System.out.println(out);
